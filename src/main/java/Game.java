@@ -3,7 +3,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 public class Game implements KeyListener{
-        private KeyListenerDemoView window;
+        private GameView window;
 
         public static final int STATE_INSTR = 0;
         public static final int STATE_MAIN = 1;
@@ -12,12 +12,11 @@ public class Game implements KeyListener{
         public Player p2;
         public String winner;
         // Get a timer going later
-
-        // Constructors
+    // Constructors
         public Game() {
             // instead of b here we would have player
             //b = new Ball(BALL_START_X, BALL_START_Y, 0, 0, BALL_START_RADIUS, Color.BLUE);
-
+            this.window = new GameView(this);
             //window = new KeyListenerDemoView(b);
 
             // The addKeyListener method attaches to this KeyListener object
@@ -25,11 +24,9 @@ public class Game implements KeyListener{
             // By passsing the parameter "this"
             // we are saying that this specific KeyListenerDemo object
             // supplies its own KeyListener functionality (contains the 3 required KeyListener methods).
-            //window.addKeyListener(this);               // #4 Required for KeyListener
-        }
-
-        public static void main(String[] args) {
-            KeyListenerDemo klDemo = new KeyListenerDemo();
+            //window.addKeyListener(this);
+            // #4 Required for KeyListener
+            window.repaint();
         }
 
         //////////////////////////////////////////////////////////////
@@ -52,8 +49,9 @@ public class Game implements KeyListener{
         @Override
         public void keyPressed(KeyEvent e) {
             // The keyCode lets you know which key was pressed
-            switch(e.getKeyCode())
-            {
+           // switch(e.getKeyCode())
+            //{
+                /*
                 case KeyEvent.VK_LEFT:
                     b.shiftX(-STEP_SIZE, 0, KeyListenerDemoView.SCREEN_WIDTH);
                     break;
@@ -73,11 +71,16 @@ public class Game implements KeyListener{
                     int newY = (int)(Math.random()*500);
                     b = new Ball(newX, newY, 0, 0, BALL_START_RADIUS, Color.BLUE);
 
+            */
 
+           // }
+            //window.repaint();
+        //}
+    }
 
-            }
-            window.repaint();
-        }
+    public static void main(String[] args) {
+            Game g1 = new Game();
+
     }
 
 
