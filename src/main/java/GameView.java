@@ -12,7 +12,7 @@ public class GameView extends JFrame {
 
     public GameView(Game backend) {
         this.backend = backend;
-        playerImage = new ImageIcon("src/main/resources/ryu.jpeg").getImage();
+        playerImage = new ImageIcon("src/main/resources/ryu.png").getImage();
 
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setTitle("Final Project");
