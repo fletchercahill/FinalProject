@@ -1,12 +1,19 @@
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-public class Game implements KeyListener {
+public class Game implements KeyListener, ActionListener{
     private GameView window;
 
     public Player p1;
     public Player p2;
     public String winner;
+    private static final int SLEEP_TIME = 16;
+    private boolean leftPressed = false;
+    private boolean rightPressed = false;
+
 
     public Game() {
         this.p1 = new Player();
@@ -15,6 +22,22 @@ public class Game implements KeyListener {
         this.window = new GameView(this);
         window.addKeyListener(this);
         window.repaint();
+        // Continually updates the screen allowing for jump to work
+    }
+
+    public void actionPerformed(ActionEvent e) {
+
+        if (leftPressed) {
+            p1.moveLeft();
+        }
+
+        if (rightPressed) {
+            p1.moveRight();
+        }
+
+        p1.update();
+        window.repaint();
+        //  TODO: Write the actionPerformed method.
     }
 
     @Override
@@ -23,6 +46,16 @@ public class Game implements KeyListener {
 
     @Override
     public void keyReleased(KeyEvent e) {
+        switch(e.getKeyCode()) {
+
+            case KeyEvent.VK_A:
+                leftPressed = false;
+                break;
+
+            case KeyEvent.VK_D:
+                rightPressed = false;
+                break;
+        }
     }
 
     @Override
@@ -30,11 +63,11 @@ public class Game implements KeyListener {
         switch(e.getKeyCode()) {
 
             case KeyEvent.VK_A:
-                p1.moveLeft();
+                leftPressed = true;
                 break;
 
             case KeyEvent.VK_D:
-                p1.moveRight();
+                rightPressed = true;
                 break;
 
             case KeyEvent.VK_W:
@@ -45,6 +78,9 @@ public class Game implements KeyListener {
             case KeyEvent.VK_SHIFT:
             case KeyEvent.VK_F:
                 p1.punch();
+                break;
+            case KeyEvent.VK_E:
+                p1.blast();
                 break;
 
             // Kick: G OR Enter
@@ -61,14 +97,14 @@ public class Game implements KeyListener {
 
         window.repaint();
 
-        if (p1.getCurrentAction().equals("punch") || p1.getCurrentAction().equals("kick")|| p1.getCurrentAction().equals("dodge")) {
+        if (p1.getCurrentAction().equals("punch") || p1.getCurrentAction().equals("kick")) {
             new Thread(() -> {
                 try {
-                    // Time delay for 0.4 seconds
                     Thread.sleep(400);
                 } catch (InterruptedException ex) {
                     ex.printStackTrace();
                 }
+
 
                 p1.resetAction();
                 window.repaint();
@@ -78,5 +114,7 @@ public class Game implements KeyListener {
 
     public static void main(String[] args) {
         Game g1 = new Game();
+        Timer clock = new Timer(SLEEP_TIME, a);
+        clock.start();
     }
 }
