@@ -76,6 +76,17 @@ public class Game implements KeyListener{
             }
 
             window.repaint();
+            new Thread(() -> {
+                try {
+                    Thread.sleep(150); // show kick/punch for 150 ms
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+                p1.resetAction();
+                window.repaint();
+            }).start();
+
+            p1.resetAction();
         }
 
 
