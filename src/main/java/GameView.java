@@ -6,22 +6,30 @@ public class GameView extends JFrame {
     private static final int    WINDOW_WIDTH = 1200,
             WINDOW_HEIGHT = 800;
     private Game backend;
-    private final Image bgImage;
+
+
+    private final Image playerImage;
 
     public GameView(Game backend) {
-        bgImage = new ImageIcon("src/main/resources/background.png").getImage();
         this.backend = backend;
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);// Tells the program what to do when the window is closed.
-        this.setTitle("Final Project");		                        // Sets the title of the window.
-        this.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);	        // Sets the width and height of the window.
+        playerImage = new ImageIcon("src/main/resources/ryu.jpeg").getImage();
+
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setTitle("Final Project");
+        this.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         this.setVisible(true);
-        // TODO: Write the view's constructor.
     }
 
     public void paint(Graphics g) {
-        g.drawImage(bgImage, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, this);
-        // TODO: write paint() so it draws all the circles on the window.
+        g.setColor(Color.WHITE);
+        g.fillRect(0, 0, 1200, 800); // clears screen
 
+        if (backend.p1 != null) {
+            g.drawImage(playerImage,
+                    backend.p1.getX(),
+                    backend.p1.getY(),
+                    100, 100,
+                    this);
+        }
     }
-
 }

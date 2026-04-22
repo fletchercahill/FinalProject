@@ -14,6 +14,11 @@ public class Game implements KeyListener{
         // Get a timer going later
     // Constructors
         public Game() {
+            this.p1 = new Player();   // ← REQUIRED
+            this.p2 = new Player();
+
+            this.window = new GameView(this);
+
             // instead of b here we would have player
             //b = new Ball(BALL_START_X, BALL_START_Y, 0, 0, BALL_START_RADIUS, Color.BLUE);
             this.window = new GameView(this);
@@ -26,6 +31,9 @@ public class Game implements KeyListener{
             // supplies its own KeyListener functionality (contains the 3 required KeyListener methods).
             //window.addKeyListener(this);
             // #4 Required for KeyListener
+
+            window.addKeyListener(this);
+
             window.repaint();
         }
 
@@ -47,36 +55,29 @@ public class Game implements KeyListener{
         }
 
         @Override
+
         public void keyPressed(KeyEvent e) {
-            // The keyCode lets you know which key was pressed
-           // switch(e.getKeyCode())
-            //{
-                /*
-                case KeyEvent.VK_LEFT:
-                    b.shiftX(-STEP_SIZE, 0, KeyListenerDemoView.SCREEN_WIDTH);
+            switch(e.getKeyCode()) {
+                case KeyEvent.VK_A:
+                    p1.moveLeft();
                     break;
-                case KeyEvent.VK_RIGHT:
-                    b.shiftX(STEP_SIZE, 0, KeyListenerDemoView.SCREEN_WIDTH);
+                case KeyEvent.VK_D:
+                    p1.moveRight();
                     break;
-                case KeyEvent.VK_UP:
-                    int topOfPane = window.getInsets().top;
-                    b.shiftY(-STEP_SIZE, topOfPane, KeyListenerDemoView.SCREEN_HEIGHT);
+                case KeyEvent.VK_W:
+                    p1.jump();
                     break;
-                case KeyEvent.VK_DOWN:
-                    b.shiftY(STEP_SIZE, 0, KeyListenerDemoView.SCREEN_HEIGHT);
+                case KeyEvent.VK_F:
+                    p1.punch();
                     break;
+                case KeyEvent.VK_G:
+                    p1.kick();
+                    break;
+            }
 
-                case KeyEvent.VK_Z:
-                    int newX = (int)(Math.random()*500);
-                    int newY = (int)(Math.random()*500);
-                    b = new Ball(newX, newY, 0, 0, BALL_START_RADIUS, Color.BLUE);
+            window.repaint();
+        }
 
-            */
-
-           // }
-            //window.repaint();
-        //}
-    }
 
     public static void main(String[] args) {
             Game g1 = new Game();
