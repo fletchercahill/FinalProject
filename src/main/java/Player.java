@@ -11,9 +11,28 @@ public class Player {
     private static final int MOVE_SPEED = 10;
     private static final int JUMP_HEIGHT = 150;
 
+    private double velocityY = 0;
+    private static final double GRAVITY = 1.0;
+    private static final double JUMP_STRENGTH = -15; // negative = upward
+    private static final int GROUND_LEVEL = 700;
+
     public void moveLeft() {
         positionX -= MOVE_SPEED;
         currentAction = "idle";
+    }
+    public void update() {
+        // apply gravity
+        velocityY += GRAVITY;
+
+        // move player
+        positionY += velocityY;
+
+        // check if player hits ground
+        if (positionY >= GROUND_LEVEL) {
+            positionY = GROUND_LEVEL;
+            velocityY = 0;
+            isJumping = false;
+        }
     }
 
     public void moveRight() {
@@ -23,6 +42,7 @@ public class Player {
 
     public void jump() {
         if (!isJumping) {
+            velocityY = JUMP_STRENGTH;
             isJumping = true;
             currentAction = "jump";
 
