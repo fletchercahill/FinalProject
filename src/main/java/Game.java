@@ -15,6 +15,19 @@ public class Game implements KeyListener {
         this.window = new GameView(this);
         window.addKeyListener(this);
         window.repaint();
+        // Continually updates the screen allowing for jump to work
+        new Thread(() -> {
+            while (true) {
+                p1.update();
+                window.repaint();
+
+                try {
+                    Thread.sleep(16); // ~60 FPS
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 
     @Override
@@ -63,6 +76,7 @@ public class Game implements KeyListener {
                 } catch (InterruptedException ex) {
                     ex.printStackTrace();
                 }
+
 
                 p1.resetAction();
                 window.repaint();
