@@ -43,6 +43,10 @@ public class Player {
         currentAction = "punch";
         System.out.println("Player punches!");
     }
+    public void dodge() {
+        currentAction = "dodge";
+        System.out.println("Player dodges!");
+    }
 
     public void resetAction() {
         currentAction = "idle";

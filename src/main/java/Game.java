@@ -52,13 +52,19 @@ public class Game implements KeyListener {
             case KeyEvent.VK_ENTER:
                 p1.kick();
                 break;
+            // Dodge: Q OR quotation key
+            case KeyEvent.VK_Q:
+            case KeyEvent.VK_QUOTE:
+                p1.dodge();
+                break;
         }
 
         window.repaint();
 
-        if (p1.getCurrentAction().equals("punch") || p1.getCurrentAction().equals("kick")) {
+        if (p1.getCurrentAction().equals("punch") || p1.getCurrentAction().equals("kick")|| p1.getCurrentAction().equals("dodge")) {
             new Thread(() -> {
                 try {
+                    // Time delay for 0.4 seconds
                     Thread.sleep(400);
                 } catch (InterruptedException ex) {
                     ex.printStackTrace();
