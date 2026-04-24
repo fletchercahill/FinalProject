@@ -2,19 +2,20 @@ public class Player {
     private int health = 100;
     private int positionX = 100;
     private int positionY = 500;
+    private int jumpStartY;
     private boolean isJumping = false;
     private boolean blastUsed = false;
     private String name;
 
     private String currentAction = "idle";
 
-    private static final int MOVE_SPEED = 10;
+    private static final int MOVE_SPEED = 20;
     private static final int JUMP_HEIGHT = 150;
 
     private double velocityY = 0;
     private static final double GRAVITY = 1.0;
     private static final double JUMP_STRENGTH = -15; // negative = upward
-    private static final int GROUND_LEVEL = 700;
+    private static final int GROUND_LEVEL = 500;
 
     public void moveLeft() {
         positionX -= MOVE_SPEED;
@@ -33,6 +34,10 @@ public class Player {
             velocityY = 0;
             isJumping = false;
         }
+        // When the character reaches a height of 100, they stop accelerating upwards
+        if (jumpStartY - positionY >= 100) {
+            velocityY = 0; // stop going up
+        }
     }
 
     public void moveRight() {
@@ -45,12 +50,7 @@ public class Player {
             velocityY = JUMP_STRENGTH;
             isJumping = true;
             currentAction = "jump";
-
-            positionY -= JUMP_HEIGHT;
-            positionY += JUMP_HEIGHT;
-
-            isJumping = false;
-            currentAction = "idle";
+            jumpStartY = positionY;
         }
     }
 
