@@ -46,7 +46,7 @@ public class GameView extends JFrame {
             g.drawImage(currentImage,
                     backend.p1.getX(),
                     backend.p1.getY(),
-                    100, 100,
+                    200, 300,
                     this);
         }
     }
