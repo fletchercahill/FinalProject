@@ -1,12 +1,17 @@
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-public class Game implements KeyListener {
+public class Game implements KeyListener, ActionListener{
     private GameView window;
 
     public Player p1;
     public Player p2;
     public String winner;
+    private static final int SLEEP_TIME = 110;
+
 
     public Game() {
         this.p1 = new Player();
@@ -16,20 +21,12 @@ public class Game implements KeyListener {
         window.addKeyListener(this);
         window.repaint();
         // Continually updates the screen allowing for jump to work
-        new Thread(() -> {
-            while (true) {
-                p1.update();
-                window.repaint();
-
-                try {
-                    Thread.sleep(16); // ~60 FPS
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
     }
-
+    public void actionPerformed(ActionEvent e) {
+        p1.update();
+        window.repaint();
+        //  TODO: Write the actionPerformed method.
+    }
     @Override
     public void keyTyped(KeyEvent e) {
     }
@@ -86,5 +83,7 @@ public class Game implements KeyListener {
 
     public static void main(String[] args) {
         Game g1 = new Game();
+        Timer clock = new Timer(SLEEP_TIME, a);
+        clock.start();
     }
 }
