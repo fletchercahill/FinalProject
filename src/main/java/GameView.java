@@ -14,13 +14,28 @@ public class GameView extends JFrame {
     private final Image kickImage;
     private final Image bgImage;
     private final Image playerImage;
+    private final Image ryuIdleImage;
+    private final Image ryuPunchImage;
+    private final Image ryuKickImage;
+    private final Image ryuDodgeImage;
+
+    private final Image kenIdleImage;
+    private final Image kenPunchImage;
+    private final Image kenKickImage;
+    private final Image kenDodgeImage;
 
     public GameView(Game backend) {
         this.backend = backend;
 
-        idleImage = new ImageIcon("src/main/resources/ryu.png").getImage();
-        punchImage = new ImageIcon("src/main/resources/ryu_punch.png").getImage();
-        kickImage = new ImageIcon("src/main/resources/ryu_kick.png").getImage();
+        ryuIdleImage = new ImageIcon("src/main/resources/ryu.png").getImage();
+        ryuPunchImage = new ImageIcon("src/main/resources/ryu_punch.png").getImage();
+        ryuKickImage = new ImageIcon("src/main/resources/ryu_kick.png").getImage();
+        ryuDodgeImage = new ImageIcon("src/main/resources/ryu_dodge.png").getImage();
+
+        kenIdleImage = new ImageIcon("src/main/resources/ken.png").getImage();
+        kenPunchImage = new ImageIcon("src/main/resources/ken_punch.png").getImage();
+        kenKickImage = new ImageIcon("src/main/resources/ken_kick.png").getImage();
+        kenDodgeImage = new ImageIcon("src/main/resources/ken_dodge.png").getImage();
 
         playerImage = new ImageIcon("src/main/resources/ryu.png").getImage();
         bgImage = new ImageIcon("src/main/resources/bg.jpg").getImage();
@@ -33,33 +48,30 @@ public class GameView extends JFrame {
 
     public void paint(Graphics g) {
         BufferStrategy bf = this.getBufferStrategy();
-        if (bf == null) return;
 
-        Graphics g2 = null;
-        try {
-            g2 = bf.getDrawGraphics();
-            myPaint(g2);
-        } finally {
-            g2.dispose();
+        if (bf == null) {
+            return;
         }
 
-        bf.show();
-        Toolkit.getDefaultToolkit().sync();
-    }
-    public void myPaint(Graphics g) {
-        g.setColor(Color.WHITE);
-        g.fillRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+        Graphics g2 = null;
 
-        g.drawImage(bgImage, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, this);
+        try {
+            g2 = bf.getDrawGraphics();
 
-        if (backend.p1 != null) {
-            Image currentImage = idleImage;
+            g2.setColor(Color.WHITE);
+            g2.fillRect(0, 0, getWidth(), getHeight());
 
-            if (backend.p1.getCurrentAction().equals("punch")) {
-                currentImage = punchImage;
-            } else if (backend.p1.getCurrentAction().equals("kick")) {
-                currentImage = kickImage;
-            }
+            // Player 1: Ryu
+            if (backend.p1 != null) {
+                Image img = ryuIdleImage;
+
+                if (backend.p1.getCurrentAction().equals("punch")) {
+                    img = ryuPunchImage;
+                } else if (backend.p1.getCurrentAction().equals("kick")) {
+                    img = ryuKickImage;
+                } else if (backend.p1.getCurrentAction().equals("dodge")) {
+                    img = ryuDodgeImage;
+                }
 
             g.drawImage(currentImage,
                     backend.p1.getX(),
@@ -148,3 +160,34 @@ public class GameView extends JFrame {
         }
     }
 }
+                g2.drawImage(img,
+                        backend.p1.getX(),
+                        backend.p1.getY(),
+                        100, 100,
+                        this);
+            }
+
+            // Player 2: Ken
+            if (backend.p2 != null) {
+                Image img = kenIdleImage;
+
+                if (backend.p2.getCurrentAction().equals("punch")) {
+                    img = kenPunchImage;
+                } else if (backend.p2.getCurrentAction().equals("kick")) {
+                    img = kenKickImage;
+                } else if (backend.p2.getCurrentAction().equals("dodge")) {
+                    img = kenDodgeImage;
+                }
+
+                g2.drawImage(img,
+                        backend.p2.getX(),
+                        backend.p2.getY(),
+                        100, 100,
+                        this);
+            }
+
+        } finally {
+            if (g2 != null) {
+                g2.dispose();
+            }
+        }

@@ -1,7 +1,9 @@
 public class Player {
     private int health = 100;
-    private int positionX = 100;
-    private int positionY = 500;
+    private int positionX;
+    private int positionY;
+
+
     private int jumpStartY;
     private int actionTimer = 0;
     private boolean isJumping = false;
@@ -21,6 +23,11 @@ public class Player {
     private static final double GRAVITY = 1.0;
     private static final double JUMP_STRENGTH = -15; // negative = upward
     private static final int GROUND_LEVEL = 500;
+
+    public Player(int x, int y) {
+        positionX = x;
+        positionY = y;
+    }
 
     public void moveLeft() {
         if (positionX >= 0){
@@ -125,10 +132,20 @@ public class Player {
 
     public void takeDamage(int damage) {
         health -= damage;
-        if (health < 0) health = 0;
+        if (health < 0) {
+            health = 0;
+        }
     }
 
-    public int getX() { return positionX; }
-    public int getY() { return positionY; }
-    public int getHealth() { return health; }
+    public int getX() {
+        return positionX;
+    }
+
+    public int getY() {
+        return positionY;
+    }
+
+    public int getHealth() {
+        return health;
+    }
 }
