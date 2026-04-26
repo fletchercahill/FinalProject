@@ -10,7 +10,9 @@ public class Game implements KeyListener, ActionListener{
     public Player p1;
     public Player p2;
     public String winner;
-    private static final int SLEEP_TIME = 110;
+    private static final int SLEEP_TIME = 16;
+    private boolean leftPressed = false;
+    private boolean rightPressed = false;
 
 
     public Game() {
@@ -23,9 +25,17 @@ public class Game implements KeyListener, ActionListener{
         // Continually updates the screen allowing for jump to work
     }
     public void actionPerformed(ActionEvent e) {
+
+        if (leftPressed) {
+            p1.moveLeft();
+        }
+
+        if (rightPressed) {
+            p1.moveRight();
+        }
+
         p1.update();
         window.repaint();
-        //  TODO: Write the actionPerformed method.
     }
     @Override
     public void keyTyped(KeyEvent e) {
@@ -33,6 +43,16 @@ public class Game implements KeyListener, ActionListener{
 
     @Override
     public void keyReleased(KeyEvent e) {
+        switch(e.getKeyCode()) {
+
+            case KeyEvent.VK_A:
+                leftPressed = false;
+                break;
+
+            case KeyEvent.VK_D:
+                rightPressed = false;
+                break;
+        }
     }
 
     @Override
@@ -40,11 +60,11 @@ public class Game implements KeyListener, ActionListener{
         switch(e.getKeyCode()) {
 
             case KeyEvent.VK_A:
-                p1.moveLeft();
+                leftPressed = true;
                 break;
 
             case KeyEvent.VK_D:
-                p1.moveRight();
+                rightPressed = true;
                 break;
 
             case KeyEvent.VK_W:
@@ -56,6 +76,9 @@ public class Game implements KeyListener, ActionListener{
             case KeyEvent.VK_F:
                 p1.punch();
                 break;
+            case KeyEvent.VK_E:
+                p1.blast();
+                break;
 
             // Kick: G OR Enter
             case KeyEvent.VK_G:
@@ -66,24 +89,11 @@ public class Game implements KeyListener, ActionListener{
 
         window.repaint();
 
-        if (p1.getCurrentAction().equals("punch") || p1.getCurrentAction().equals("kick")) {
-            new Thread(() -> {
-                try {
-                    Thread.sleep(400);
-                } catch (InterruptedException ex) {
-                    ex.printStackTrace();
-                }
-
-
-                p1.resetAction();
-                window.repaint();
-            }).start();
-        }
     }
 
     public static void main(String[] args) {
         Game g1 = new Game();
-        Timer clock = new Timer(SLEEP_TIME, a);
+        Timer clock = new Timer(SLEEP_TIME, g1);
         clock.start();
     }
 }

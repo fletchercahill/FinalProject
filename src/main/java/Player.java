@@ -3,13 +3,18 @@ public class Player {
     private int positionX = 100;
     private int positionY = 500;
     private int jumpStartY;
+    private int actionTimer = 0;
     private boolean isJumping = false;
     private boolean blastUsed = false;
+    private boolean blasting = false;
+    private int blastTimer = 0;
+    private int blastRadius = 0;
+    private static final int MAX_BLAST_TIME = 40;
     private String name;
 
     private String currentAction = "idle";
 
-    private static final int MOVE_SPEED = 20;
+    private static final int MOVE_SPEED = 10;
     private static final int JUMP_HEIGHT = 150;
 
     private double velocityY = 0;
@@ -18,8 +23,10 @@ public class Player {
     private static final int GROUND_LEVEL = 500;
 
     public void moveLeft() {
-        positionX -= MOVE_SPEED;
-        currentAction = "idle";
+        if (positionX >= 0){
+            positionX -= MOVE_SPEED;
+            currentAction = "idle";
+        }
     }
     public void update() {
         // apply gravity
@@ -38,11 +45,30 @@ public class Player {
         if (jumpStartY - positionY >= 100) {
             velocityY = 0; // stop going up
         }
+        if (blasting) {
+            blastTimer--;
+            blastRadius += 20; // how fast it expands
+
+            if (blastTimer <= 0) {
+                blasting = false;
+                blastRadius = 0;
+                currentAction = "idle";
+            }
+        }// handle action timer
+        if (actionTimer > 0) {
+            actionTimer--;
+            if (actionTimer == 0) {
+                currentAction = "idle";
+            }
+        }
+
     }
 
     public void moveRight() {
-        positionX += MOVE_SPEED;
-        currentAction = "idle";
+        if (positionX <= 1000){
+            positionX += MOVE_SPEED;
+            currentAction = "idle";
+        }
     }
 
     public void jump() {
@@ -53,14 +79,24 @@ public class Player {
             jumpStartY = positionY;
         }
     }
+    public void blast() {
+        if (!blasting) {
+            blasting = true;
+            blastTimer = MAX_BLAST_TIME;
+            blastRadius = 0;
+            currentAction = "blast";
+        }
+    }
 
     public void kick() {
         currentAction = "kick";
+        actionTimer = 25;
         System.out.println("Player kicks!");
     }
 
     public void punch() {
         currentAction = "punch";
+        actionTimer = 25;
         System.out.println("Player punches!");
     }
 
@@ -80,6 +116,8 @@ public class Player {
             System.out.println("Blast already used!");
         }
     }
+    public boolean isBlasting() { return blasting; }
+    public int getBlastRadius() { return blastRadius; }
 
     public void takeDamage(int damage) {
         health -= damage;
