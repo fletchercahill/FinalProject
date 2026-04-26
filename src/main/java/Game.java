@@ -12,6 +12,7 @@ public class Game implements KeyListener, ActionListener{
     private boolean leftPressed = false;
     private boolean rightPressed = false;
 
+    private static final int SLEEP_TIME = 10;
 
     private int p1ActionCounter = 0;
     private int p2ActionCounter = 0;
@@ -67,44 +68,56 @@ public class Game implements KeyListener, ActionListener{
     }
 
     @Override
-    public void keyPressed(KeyEvent e) {
-        switch(e.getKeyCode()) {
+    public void actionPerformed(ActionEvent e) {
 
-            case KeyEvent.VK_A:
-                leftPressed = true;
-                break;
+        // Player 1 movement
+        if (keysPressed.contains(KeyEvent.VK_A)) {
+            p1.moveLeft();
+        }
 
-            case KeyEvent.VK_D:
-                rightPressed = true;
-                break;
+        if (keysPressed.contains(KeyEvent.VK_D)) {
+            p1.moveRight();
+        }
 
-            case KeyEvent.VK_W:
-                p1.jump();
-                break;
+        if (keysPressed.contains(KeyEvent.VK_W)) {
+            p1.jump();
+        }
 
-            // Punch: Shift OR F
-            case KeyEvent.VK_SHIFT:
-            case KeyEvent.VK_F:
-                p1.punch();
-                break;
-            case KeyEvent.VK_E:
-                p1.blast();
-                break;
+        // Player 1 actions
+        if (keysPressed.contains(KeyEvent.VK_F)) {
+            p1.punch();
+            p1ActionCounter = 30;
+        }
 
-            // Kick: G OR Enter
-            case KeyEvent.VK_G:
-            case KeyEvent.VK_ENTER:
-                p1.kick();
-                break;
-            // Dodge: Q OR quotation key
-            case KeyEvent.VK_Q:
-            case KeyEvent.VK_QUOTE:
-                p1.dodge();
-                break;
+        if (keysPressed.contains(KeyEvent.VK_G)) {
+            p1.kick();
+            p1ActionCounter = 30;
+        }
+
+        if (keysPressed.contains(KeyEvent.VK_Q)) {
+            p1.dodge();
+            p1ActionCounter = 30;
+        }
+
+        // Player 2 movement
+        if (keysPressed.contains(KeyEvent.VK_LEFT)) {
+            p2.moveLeft();
+        }
+
+        if (keysPressed.contains(KeyEvent.VK_RIGHT)) {
+            p2.moveRight();
+        }
+
+        if (keysPressed.contains(KeyEvent.VK_UP)) {
+            p2.jump();
         }
 
         window.repaint();
 
+        if (keysPressed.contains(KeyEvent.VK_ENTER)) {
+            p2.kick();
+            p2ActionCounter = 30;
+        }
 
         if (keysPressed.contains(KeyEvent.VK_SLASH)) {
             p2.dodge();
@@ -134,6 +147,7 @@ public class Game implements KeyListener, ActionListener{
 
     public static void main(String[] args) {
         Game g1 = new Game();
+
         Timer clock = new Timer(SLEEP_TIME, g1);
         clock.start();
     }

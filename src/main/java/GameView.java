@@ -48,10 +48,7 @@ public class GameView extends JFrame {
 
     public void paint(Graphics g) {
         BufferStrategy bf = this.getBufferStrategy();
-
-        if (bf == null) {
-            return;
-        }
+        if (bf == null) return;
 
         Graphics g2 = null;
 
@@ -61,7 +58,7 @@ public class GameView extends JFrame {
             g2.setColor(Color.WHITE);
             g2.fillRect(0, 0, getWidth(), getHeight());
 
-            // Player 1: Ryu
+            // Player 1
             if (backend.p1 != null) {
                 Image img = ryuIdleImage;
 
@@ -162,12 +159,12 @@ public class GameView extends JFrame {
 }
                 g2.drawImage(img,
                         backend.p1.getX(),
-                        backend.p1.getY(),
+                        backend.p1.getDrawY(),  // 👈 changed here
                         100, 100,
                         this);
             }
 
-            // Player 2: Ken
+            // Player 2
             if (backend.p2 != null) {
                 Image img = kenIdleImage;
 
@@ -181,7 +178,7 @@ public class GameView extends JFrame {
 
                 g2.drawImage(img,
                         backend.p2.getX(),
-                        backend.p2.getY(),
+                        backend.p2.getDrawY(),  // 👈 changed here
                         100, 100,
                         this);
             }
