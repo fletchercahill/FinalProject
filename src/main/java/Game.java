@@ -97,24 +97,12 @@ public class Game implements KeyListener, ActionListener{
 
         window.repaint();
 
-        if (p1.getCurrentAction().equals("punch") || p1.getCurrentAction().equals("kick")) {
-            new Thread(() -> {
-                try {
-                    Thread.sleep(400);
-                } catch (InterruptedException ex) {
-                    ex.printStackTrace();
-                }
 
-
-                p1.resetAction();
-                window.repaint();
-            }).start();
-        }
     }
 
     public static void main(String[] args) {
         Game g1 = new Game();
-        Timer clock = new Timer(SLEEP_TIME, a);
+        Timer clock = new Timer(SLEEP_TIME, g1);
         clock.start();
     }
 }
