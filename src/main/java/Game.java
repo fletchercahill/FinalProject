@@ -12,7 +12,6 @@ public class Game implements KeyListener, ActionListener{
     private boolean leftPressed = false;
     private boolean rightPressed = false;
 
-    private static final int SLEEP_TIME = 10;
 
     private int p1ActionCounter = 0;
     private int p2ActionCounter = 0;
@@ -38,20 +37,7 @@ public class Game implements KeyListener, ActionListener{
         // Continually updates the screen allowing for jump to work
     }
 
-    public void actionPerformed(ActionEvent e) {
 
-        if (leftPressed) {
-            p1.moveLeft();
-        }
-
-        if (rightPressed) {
-            p1.moveRight();
-        }
-
-        p1.update();
-        window.repaint();
-        //  TODO: Write the actionPerformed method.
-    }
 
     @Override
     public void keyTyped(KeyEvent e) {}
@@ -100,6 +86,14 @@ public class Game implements KeyListener, ActionListener{
             p1ActionCounter = 30;
             p1AttackHit = false;
         }
+        if (keysPressed.contains(KeyEvent.VK_SLASH)) {
+            p2.blast();
+            p1ActionCounter = 30;
+        }
+        if (keysPressed.contains(KeyEvent.VK_E)) {
+            p1.blast();
+            p1ActionCounter = 30;
+        }
 
         if (keysPressed.contains(KeyEvent.VK_Q)) {
             p1.dodge();
@@ -119,7 +113,8 @@ public class Game implements KeyListener, ActionListener{
         if (keysPressed.contains(KeyEvent.VK_UP)) {
             p2.jump();
         }
-
+        p1.update();
+        p2.update();
         window.repaint();
 
         if (keysPressed.contains(KeyEvent.VK_ENTER)) {

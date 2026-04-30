@@ -107,9 +107,6 @@ public class Player {
         System.out.println("Player punches!");
     }
 
-    public void kick() {
-        currentAction = "kick";
-    }
 
     public void dodge() {
         currentAction = "dodge";
@@ -133,13 +130,7 @@ public class Player {
     }
 
     // ---- Visual walking effect ----
-    public int getDrawY() {
-        if (currentAction.equals("idle")) {
-            return positionY;
-        }
 
-        if (stepCounter % 16 < 8) {
-            return positionY - 1;
     public void useBlast() {
         if (!blastUsed) {
             System.out.println("Player uses special blast!");
@@ -151,20 +142,9 @@ public class Player {
     public boolean isBlasting() { return blasting; }
     public int getBlastRadius() { return blastRadius; }
 
-    public void takeDamage(int damage) {
-        health -= damage;
-        if (health < 0) {
-            health = 0;
-        }
-    }
 
-    public int getX() {
-        return positionX;
-    }
 
-    public int getY() {
-        return positionY;
-    }
+
 
     public int getX() { return positionX; }
     public int getY() { return positionY; }
