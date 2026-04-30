@@ -1,7 +1,9 @@
 public class Player {
     private int health = 100;
-    private int positionX = 100;
-    private int positionY = 500;
+    private int positionX;
+    private int positionY;
+
+
     private int jumpStartY;
     private int actionTimer = 0;
     private boolean isJumping = false;
@@ -17,10 +19,16 @@ public class Player {
     private static final int MOVE_SPEED = 10;
     private static final int JUMP_HEIGHT = 150;
 
+
     private double velocityY = 0;
     private static final double GRAVITY = 1.0;
     private static final double JUMP_STRENGTH = -15; // negative = upward
     private static final int GROUND_LEVEL = 500;
+
+    public Player(int x, int y) {
+        positionX = x;
+        positionY = y;
+    }
 
     public void moveLeft() {
         if (positionX >= 0){
@@ -61,7 +69,6 @@ public class Player {
                 currentAction = "idle";
             }
         }
-
     }
 
     public void moveRight() {
@@ -99,6 +106,11 @@ public class Player {
         actionTimer = 25;
         System.out.println("Player punches!");
     }
+
+    public void kick() {
+        currentAction = "kick";
+    }
+
     public void dodge() {
         currentAction = "dodge";
         System.out.println("Player dodges!");
@@ -112,6 +124,22 @@ public class Player {
         return currentAction;
     }
 
+    // ---- Damage ----
+    public void takeDamage(int damage) {
+        health -= damage;
+        if (health < 0) {
+            health = 0;
+        }
+    }
+
+    // ---- Visual walking effect ----
+    public int getDrawY() {
+        if (currentAction.equals("idle")) {
+            return positionY;
+        }
+
+        if (stepCounter % 16 < 8) {
+            return positionY - 1;
     public void useBlast() {
         if (!blastUsed) {
             System.out.println("Player uses special blast!");
@@ -125,7 +153,17 @@ public class Player {
 
     public void takeDamage(int damage) {
         health -= damage;
-        if (health < 0) health = 0;
+        if (health < 0) {
+            health = 0;
+        }
+    }
+
+    public int getX() {
+        return positionX;
+    }
+
+    public int getY() {
+        return positionY;
     }
 
     public int getX() { return positionX; }
