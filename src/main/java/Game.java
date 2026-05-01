@@ -20,18 +20,23 @@ public class Game implements KeyListener, ActionListener, MouseListener {
     private boolean leftPressed = false;
     private boolean rightPressed = false;
     private boolean facingRight = true;
+    public boolean gameOver = false;
 
     private int p1ActionCounter = 0;
     private int p2ActionCounter = 0;
+    public int hitX = 0;
+    public int hitY = 0;
+    public int hitTimer = 0;
 
+    private static final int HIT_DURATION = 10; // frames
     private boolean p1AttackHit = false;
     private boolean p2AttackHit = false;
 
     private static final int PUNCH_RANGE = 110;
     private static final int KICK_RANGE = 140;
 
-    private static final int PUNCH_DAMAGE = 10;
-    private static final int KICK_DAMAGE = 15;
+    private static final int PUNCH_DAMAGE = 4;
+    private static final int KICK_DAMAGE = 5;
 
     private HashSet<Integer> keysPressed = new HashSet<>();
 
@@ -48,14 +53,6 @@ public class Game implements KeyListener, ActionListener, MouseListener {
 
     public int getGameState() {
         return gameState;
-    }
-
-    @Override
-    public void keyTyped(KeyEvent e) {}
-
-    @Override
-    public void keyPressed(KeyEvent e) {
-        keysPressed.add(e.getKeyCode());
     }
     @Override
     public void mouseClicked(MouseEvent e) {
@@ -83,6 +80,14 @@ public class Game implements KeyListener, ActionListener, MouseListener {
         window.repaint();
     }
     @Override
+    public void keyTyped(KeyEvent e) {}
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        keysPressed.add(e.getKeyCode());
+    }
+
+    @Override
     public void keyReleased(KeyEvent e) {
         keysPressed.remove(e.getKeyCode());
         switch(e.getKeyCode()) {
@@ -95,6 +100,9 @@ public class Game implements KeyListener, ActionListener, MouseListener {
                 rightPressed = false;
                 break;
         }
+    }
+    private boolean canBeHit(Player target) {
+        return !target.isJumping() && !target.getCurrentAction().equals("dodge");
     }
 
     @Override public void mousePressed(MouseEvent e) {}
@@ -158,6 +166,14 @@ public class Game implements KeyListener, ActionListener, MouseListener {
         if (keysPressed.contains(KeyEvent.VK_UP)) {
             p2.jump();
         }
+        // Make players face each other
+        if (p1.getX() < p2.getX()) {
+            p1.setFacingRight(true);
+            p2.setFacingRight(false);
+        } else {
+            p1.setFacingRight(false);
+            p2.setFacingRight(true);
+        }
         p1.update();
         p2.update();
         window.repaint();
@@ -174,6 +190,9 @@ public class Game implements KeyListener, ActionListener, MouseListener {
         }
 
         checkAttacks();
+        if (hitTimer > 0) {
+            hitTimer--;
+        }
 
         if (p1.getHealth() <= 0 || p2.getHealth() <= 0) {
             gameState = STATE_END;
@@ -198,31 +217,60 @@ public class Game implements KeyListener, ActionListener, MouseListener {
                 p2AttackHit = false;
             }
         }
-
+        if (!gameOver) {
+            if (p1.getHealth() <= 0) {
+                gameOver = true;
+                winner = "Player 2 Wins!";
+            } else if (p2.getHealth() <= 0) {
+                gameOver = true;
+                winner = "Player 1 Wins!";
+            }
+        }
         window.repaint();
     }
+    private boolean isInFront(Player attacker, Player target) {
+        int attackerCenter = attacker.getX() + 115; // half width (230/2)
+        int targetCenter = target.getX() + 115;
 
+        if (attacker.isFacingRight()) {
+            return targetCenter > attackerCenter;
+        } else {
+            return targetCenter < attackerCenter;
+        }
+    }
     private void checkAttacks() {
-        int distance = Math.abs(p1.getX() - p2.getX());
+        int p1Center = p1.getX() + 115;
+        int p2Center = p2.getX() + 115;
+
+        int xDistance = Math.abs(p1Center - p2Center);        int yDistance = Math.abs(p1.getY() - p2.getY());
+
+        boolean closeY = yDistance <= 120;
 
         // ---- P1 hits P2 ----
-        if (!p1AttackHit) {
-            if (p1.getCurrentAction().equals("punch") && distance <= PUNCH_RANGE) {
+        if (!p1AttackHit && closeY && isInFront(p1, p2)) {
 
-                if (!p2.getCurrentAction().equals("dodge")) {
+            if (p1.getCurrentAction().equals("punch") && xDistance <= PUNCH_RANGE) {
+
+                if (canBeHit(p2)){
                     p2.takeDamage(PUNCH_DAMAGE);
-                    System.out.println("P1 hit P2!");
+                    hitX = (p1.getX() + p2.getX()) / 2 + 115;
+                    hitY = (p1.getY() + p2.getY()) / 2 + 100;
+                    hitTimer = HIT_DURATION;
+                    System.out.println("P1 punched P2 (-" + PUNCH_DAMAGE + " HP)");
                 } else {
                     System.out.println("P2 dodged!");
                 }
 
                 p1AttackHit = true;
 
-            } else if (p1.getCurrentAction().equals("kick") && distance <= KICK_RANGE) {
+            } else if (p1.getCurrentAction().equals("kick") && xDistance <= KICK_RANGE) {
 
-                if (!p2.getCurrentAction().equals("dodge")) {
+                if (canBeHit(p2)) {
+                    hitX = (p1.getX() + p2.getX()) / 2 + 115;
+                    hitY = (p1.getY() + p2.getY()) / 2 + 100;
+                    hitTimer = HIT_DURATION;
                     p2.takeDamage(KICK_DAMAGE);
-                    System.out.println("P1 hit P2!");
+                    System.out.println("P1 kicked P2 (-" + KICK_DAMAGE + " HP)");
                 } else {
                     System.out.println("P2 dodged!");
                 }
@@ -232,25 +280,62 @@ public class Game implements KeyListener, ActionListener, MouseListener {
         }
 
         // ---- P2 hits P1 ----
-        if (!p2AttackHit) {
-            if (p2.getCurrentAction().equals("punch") && distance <= PUNCH_RANGE) {
+        if (!p2AttackHit && closeY && isInFront(p2, p1)) {
 
-                if (!p1.getCurrentAction().equals("dodge")) {
+            if (p2.getCurrentAction().equals("punch") && xDistance <= PUNCH_RANGE) {
+
+                if (canBeHit(p1)) {
+                    hitX = (p1.getX() + p2.getX()) / 2 + 115;
+                    hitY = (p1.getY() + p2.getY()) / 2 + 100;
+                    hitTimer = HIT_DURATION;
                     p1.takeDamage(PUNCH_DAMAGE);
-                    System.out.println("P2 hit P1!");
+                    System.out.println("P2 punched P1 (-" + PUNCH_DAMAGE + " HP)");
                 } else {
                     System.out.println("P1 dodged!");
                 }
 
                 p2AttackHit = true;
 
-            } else if (p2.getCurrentAction().equals("kick") && distance <= KICK_RANGE) {
+            } else if (p2.getCurrentAction().equals("kick") && xDistance <= KICK_RANGE) {
 
-                if (!p1.getCurrentAction().equals("dodge")) {
+                if (canBeHit(p1)) {
+                    hitX = (p1.getX() + p2.getX()) / 2 + 115;
+                    hitY = (p1.getY() + p2.getY()) / 2 + 100;
+                    hitTimer = HIT_DURATION;
                     p1.takeDamage(KICK_DAMAGE);
-                    System.out.println("P2 hit P1!");
+                    System.out.println("P2 kicked P1 (-" + KICK_DAMAGE + " HP)");
                 } else {
                     System.out.println("P1 dodged!");
+                }
+
+                p2AttackHit = true;
+            }
+        }
+
+        checkBlastDamage();
+    }
+    private void checkBlastDamage() {
+
+        int distance = Math.abs(p1.getX() - p2.getX());
+
+        if (p1.isBlasting() && !p1AttackHit && isInFront(p1, p2)) {
+            if (distance <= p1.getBlastRadius()) {
+
+                if (canBeHit(p2)) {
+                    p2.takeDamage(20);
+                    System.out.println("P1 BLAST hit P2 (-20 HP)");
+                }
+
+                p1AttackHit = true;
+            }
+        }
+
+        if (p2.isBlasting() && !p2AttackHit && isInFront(p2, p1)) {
+            if (distance <= p2.getBlastRadius()) {
+
+                if (canBeHit(p1)) {
+                    p1.takeDamage(20);
+                    System.out.println("P2 BLAST hit P1 (-20 HP)");
                 }
 
                 p2AttackHit = true;

@@ -267,8 +267,30 @@ public class GameView extends JFrame {
 
                 g2.translate(-shakeX, -shakeY);
             }
+            if (backend.hitTimer > 0) {
+                int size = 40 + (10 - backend.hitTimer) * 5; // grows slightly
+
+                // outer glow
+                g2.setColor(new Color(255, 200, 50, 150));
+                g2.fillOval(backend.hitX - size/2, backend.hitY - size/2, size, size);
+
+                // inner flash
+                g2.setColor(new Color(255, 255, 255, 220));
+                g2.fillOval(backend.hitX - 10, backend.hitY - 10, 20, 20);
+            }
 
         } finally {
+            if (backend.gameOver) {
+                g2.setColor(new Color(0, 0, 0, 180)); // dark overlay
+                g2.fillRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+
+                g2.setColor(Color.WHITE);
+                g2.setFont(new Font("Arial", Font.BOLD, 60));
+                g2.drawString("GAME OVER", 400, 300);
+
+                g2.setFont(new Font("Arial", Font.BOLD, 40));
+                g2.drawString(backend.winner, 420, 380);
+            }
             g2.dispose();
             bf.show();
         }

@@ -1,5 +1,5 @@
 public class Player {
-    private int health = 100;
+    private int health = 50;
     private int positionX;
     private int positionY;
     private boolean facingRight = true;
@@ -37,6 +37,9 @@ public class Player {
             positionX -= MOVE_SPEED;
             currentAction = "idle";
         }
+    }
+    public boolean isJumping() {
+        return isJumping;
     }
     public void update() {
         // apply gravity
@@ -88,14 +91,7 @@ public class Player {
             jumpStartY = positionY;
         }
     }
-    public void blast() {
-        if (!blasting) {
-            blasting = true;
-            blastTimer = MAX_BLAST_TIME;
-            blastRadius = 0;
-            currentAction = "blast";
-        }
-    }
+
 
     public void kick() {
         currentAction = "kick";
@@ -133,9 +129,13 @@ public class Player {
 
     // ---- Visual walking effect ----
 
-    public void useBlast() {
+    public void blast() {
         if (!blastUsed) {
             System.out.println("Player uses special blast!");
+            blasting = true;
+            blastTimer = MAX_BLAST_TIME;
+            blastRadius = 0;
+            currentAction = "blast";
             blastUsed = true;
         } else {
             System.out.println("Blast already used!");
