@@ -9,6 +9,11 @@ public class GameView extends JFrame {
 
     private Game backend;
 
+    private final Image idleImage;
+    private final Image punchImage;
+    private final Image kickImage;
+    private final Image bgImage;
+    private final Image playerImage;
     private final Image ryuIdleImage;
     private final Image ryuPunchImage;
     private final Image ryuKickImage;
@@ -58,42 +63,17 @@ public class GameView extends JFrame {
         this.setTitle("Final Project");
         this.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         this.setVisible(true);
-
         createBufferStrategy(2);
     }
+    private void drawInstructionsScreen(Graphics2D g2) {
 
-    @Override
-    public void paint(Graphics g) {
-        BufferStrategy bf = this.getBufferStrategy();
-        if (bf == null) return;
+        // background
+        g2.setColor(Color.BLACK);
+        g2.fillRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 
-        Graphics2D g2 = (Graphics2D) bf.getDrawGraphics();
-
-        try {
-            if (backend.getGameState() == Game.STATE_WELCOME) {
-                drawWelcomeScreen(g2);
-                return;
-            }
-
-            if (backend.getGameState() == Game.STATE_INSTRUCTIONS) {
-                drawInstructionsScreen(g2);
-                return;
-            }
-
-            g2.setColor(Color.WHITE);
-            g2.fillRect(0, 0, getWidth(), getHeight());
-            g2.drawImage(bgImage, 0, 0, getWidth(), getHeight(), this);
-
-            drawHealthBars(g2);
-            drawPlayers(g2);
-            drawBlast(g2);
-
-        } finally {
-            g2.dispose();
-            bf.show();
-        }
+        // draw your Controls.png full screen
+        g2.drawImage(controlsImage, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, this);
     }
-
     private void drawHealthBars(Graphics2D g2) {
         int barWidth = 300;
         int barHeight = 25;
@@ -125,50 +105,6 @@ public class GameView extends JFrame {
         g2.setColor(Color.BLACK);
         g2.drawRect(WINDOW_WIDTH - 370, 50, barWidth, barHeight);
     }
-
-    private void drawPlayers(Graphics2D g2) {
-        Image img1 = ryuIdleImage;
-        String action1 = backend.p1.getCurrentAction();
-
-        if ("punch".equals(action1)) img1 = ryuPunchImage;
-        else if ("kick".equals(action1)) img1 = ryuKickImage;
-        else if ("dodge".equals(action1)) img1 = ryuDodgeImage;
-
-        g2.drawImage(img1, backend.p1.getX(), backend.p1.getY(), 230, 250, this);
-
-        Image img2 = kenIdleImage;
-        String action2 = backend.p2.getCurrentAction();
-
-        if ("punch".equals(action2)) img2 = kenPunchImage;
-        else if ("kick".equals(action2)) img2 = kenKickImage;
-        else if ("dodge".equals(action2)) img2 = kenDodgeImage;
-
-        g2.drawImage(img2, backend.p2.getX(), backend.p2.getY(), 230, 250, this);
-    }
-
-    private void drawBlast(Graphics2D g2) {
-        Player blastingPlayer = null;
-
-        if (backend.p1 != null && backend.p1.isBlasting()) {
-            blastingPlayer = backend.p1;
-        } else if (backend.p2 != null && backend.p2.isBlasting()) {
-            blastingPlayer = backend.p2;
-        }
-
-        if (blastingPlayer != null) {
-            int r = blastingPlayer.getBlastRadius();
-
-            int cx = blastingPlayer.getX() + 115;
-            int cy = blastingPlayer.getY() + 125;
-
-            g2.setColor(new Color(255, 0, 0, 120));
-            g2.fillOval(cx - r / 2, cy - r / 2, r, r);
-
-            g2.setColor(new Color(255, 0, 0, 60));
-            g2.fillOval(cx - r, cy - r, r * 2, r * 2);
-        }
-    }
-
     private void drawWelcomeScreen(Graphics2D g2) {
         g2.setColor(new Color(240, 220, 180));
         g2.fillRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -195,14 +131,146 @@ public class GameView extends JFrame {
         g2.setFont(new Font("Arial", Font.BOLD, 30));
         g2.drawString("INSTRUCTIONS", 495, 440);
     }
+    @Override
+    public void paint(Graphics g) {
+        BufferStrategy bf = this.getBufferStrategy();
+        if (bf == null) return;
 
-    private void drawInstructionsScreen(Graphics2D g2) {
+        Graphics2D g2 = (Graphics2D) bf.getDrawGraphics();
 
-        // background
-        g2.setColor(Color.BLACK);
-        g2.fillRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+        try {
+            if (backend.getGameState() == Game.STATE_WELCOME) {
+                drawWelcomeScreen(g2);
+                return;
+            }
 
-        // draw your Controls.png full screen
-        g2.drawImage(controlsImage, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, this);
+            if (backend.getGameState() == Game.STATE_INSTRUCTIONS) {
+                drawInstructionsScreen(g2);
+                return;
+            }
+            // Background
+            g2.setColor(Color.WHITE);
+            g2.fillRect(0, 0, getWidth(), getHeight());
+            g2.drawImage(bgImage, 0, 0, getWidth(), getHeight(), this);
+            drawHealthBars(g2);
+
+            // -------- PLAYER 1 --------
+            if (backend.p1 != null) {
+                Image img = ryuIdleImage;
+
+                String action = backend.p1.getCurrentAction();
+                if ("punch".equals(action)) img = ryuPunchImage;
+                else if ("kick".equals(action)) img = ryuKickImage;
+                else if ("dodge".equals(action)) img = ryuDodgeImage;
+
+                g2.drawImage(img,
+                        backend.p1.getX(),
+                        backend.p1.getY(),
+                        230, 250,
+                        this);
+            }
+
+            // -------- PLAYER 2 --------
+            if (backend.p2 != null) {
+                Image img = kenIdleImage;
+
+                String action = backend.p2.getCurrentAction();
+                if ("punch".equals(action)) img = kenPunchImage;
+                else if ("kick".equals(action)) img = kenKickImage;
+                else if ("dodge".equals(action)) img = kenDodgeImage;
+
+                g2.drawImage(img,
+                        backend.p2.getX(),
+                        backend.p2.getY(),
+                        230, 250,
+                        this);
+            }
+
+            // -------- BLAST (shared) --------
+            Player blastingPlayer = null;
+
+            if (backend.p1 != null && backend.p1.isBlasting()) {
+                blastingPlayer = backend.p1;
+            } else if (backend.p2 != null && backend.p2.isBlasting()) {
+                blastingPlayer = backend.p2;
+            }
+
+            if (blastingPlayer != null) {
+                int r = blastingPlayer.getBlastRadius();
+                int shakeStrength = Math.max(0, 20 - r / 15);
+
+                int shakeX = (int)(Math.random() * shakeStrength * 2 - shakeStrength);
+                int shakeY = (int)(Math.random() * shakeStrength * 2 - shakeStrength);
+
+                g2.translate(shakeX, shakeY);
+
+                int cx = blastingPlayer.getX() + 100;
+                int cy = blastingPlayer.getY() + 150;
+
+                float progress = Math.min(1.0f, r / 300.0f);
+
+                // Flash
+                int flashAlpha = (int)(200 * (1 - progress));
+                g2.setColor(new Color(255, 255, 255, flashAlpha));
+                g2.fillRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+
+                // Glow
+                for (int i = 0; i < 4; i++) {
+                    int glowR = r + i * 20;
+                    int alpha = (int)(120 * (1 - progress)) - i * 20;
+
+                    if (alpha > 0) {
+                        g2.setColor(new Color(255, 200 - i * 40, 50, alpha));
+                        g2.fillOval(cx - glowR, cy - glowR, glowR * 2, glowR * 2);
+                    }
+                }
+
+                // Core
+                int coreSize = Math.max(10, r / 4);
+                g2.setColor(new Color(255, 255, 255, 220));
+                g2.fillOval(cx - coreSize / 2, cy - coreSize / 2, coreSize, coreSize);
+
+                // Fireball
+                g2.setColor(new Color(255, 120, 0, 180));
+                g2.fillOval(cx - r / 2, cy - r / 2, r, r);
+
+                g2.setColor(new Color(255, 60, 0, 120));
+                g2.fillOval(cx - r, cy - r, r * 2, r * 2);
+
+                // Shockwaves
+                g2.setStroke(new BasicStroke(4));
+                for (int i = 0; i < 3; i++) {
+                    int ringR = (int)(r * (1.2 + i * 0.4));
+                    int alpha = (int)(150 * (1 - progress)) - i * 40;
+
+                    if (alpha > 0) {
+                        g2.setColor(new Color(255, 255, 255, alpha));
+                        g2.drawOval(cx - ringR, cy - ringR, ringR * 2, ringR * 2);
+                    }
+                }
+
+                // Smoke
+                int smokeR = (int)(r * 1.6);
+                int smokeAlpha = (int)(100 * (1 - progress));
+
+                g2.setStroke(new BasicStroke(6));
+                g2.setColor(new Color(80, 80, 80, smokeAlpha));
+                g2.drawOval(cx - smokeR, cy - smokeR, smokeR * 2, smokeR * 2);
+
+                // Heat distortion
+                g2.setStroke(new BasicStroke(2));
+                for (int i = 0; i < 5; i++) {
+                    int heatR = r + i * 12;
+                    g2.setColor(new Color(255, 255, 255, 20));
+                    g2.drawOval(cx - heatR, cy - heatR, heatR * 2, heatR * 2);
+                }
+
+                g2.translate(-shakeX, -shakeY);
+            }
+
+        } finally {
+            g2.dispose();
+            bf.show();
+        }
     }
 }

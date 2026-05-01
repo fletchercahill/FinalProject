@@ -2,8 +2,10 @@ public class Player {
     private int health = 100;
     private int positionX;
     private int positionY;
-
-
+    private boolean facingRight = true;
+    private static final int PUNCH_DAMAGE = 4;
+    private static final int KICK_DAMAGE = 5;
+    private static final int BLAST_DAMAGE = 20;
     private int jumpStartY;
     private int actionTimer = 0;
     private boolean isJumping = false;
@@ -138,6 +140,14 @@ public class Player {
         } else {
             System.out.println("Blast already used!");
         }
+    }
+    // Checks if a player is facing right to determine if it needs to be reflected
+    public boolean isFacingRight() {
+        return facingRight;
+    }
+
+    public void setFacingRight(boolean facingRight) {
+        this.facingRight = facingRight;
     }
     public boolean isBlasting() { return blasting; }
     public int getBlastRadius() { return blastRadius; }
