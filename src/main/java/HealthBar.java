@@ -1,8 +1,12 @@
 public class HealthBar {
-    public int maxHealth;
-    public int currentHeath;
+    private int maxHealth;
 
-    public void updateHealth(){
-        //
+    public HealthBar(int maxHealth) {
+        this.maxHealth = maxHealth;
+    }
+
+    public int getWidth(int currentHealth, int maxWidth) {
+        double percent = (double) currentHealth / maxHealth;
+        return (int)(percent * maxWidth);
     }
 }
