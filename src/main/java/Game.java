@@ -24,16 +24,21 @@ public class Game implements KeyListener, ActionListener, MouseListener {
 
     private int p1ActionCounter = 0;
     private int p2ActionCounter = 0;
-    public int hitX = 0;
-    public int hitY = 0;
-    public int hitTimer = 0;
+    public int effectX = 0;
+    public int effectY = 0;
+    public int effectTimer = 0;
+    public int shakeTimer;
+    public int shakeStrength;
+    public String effectType = ""; // "punch", "kick", "blast"
+
+    private static final int EFFECT_DURATION = 12;
 
     private static final int HIT_DURATION = 10; // frames
     private boolean p1AttackHit = false;
     private boolean p2AttackHit = false;
 
-    private static final int PUNCH_RANGE = 110;
-    private static final int KICK_RANGE = 140;
+    private static final int PUNCH_RANGE = 160;
+    private static final int KICK_RANGE = 190;
 
     private static final int PUNCH_DAMAGE = 4;
     private static final int KICK_DAMAGE = 5;
@@ -190,8 +195,8 @@ public class Game implements KeyListener, ActionListener, MouseListener {
         }
 
         checkAttacks();
-        if (hitTimer > 0) {
-            hitTimer--;
+        if (effectTimer > 0) {
+            effectTimer--;
         }
 
         if (p1.getHealth() <= 0 || p2.getHealth() <= 0) {
@@ -242,7 +247,8 @@ public class Game implements KeyListener, ActionListener, MouseListener {
         int p1Center = p1.getX() + 115;
         int p2Center = p2.getX() + 115;
 
-        int xDistance = Math.abs(p1Center - p2Center);        int yDistance = Math.abs(p1.getY() - p2.getY());
+        int xDistance = Math.abs(p1Center - p2Center);
+        int yDistance = Math.abs(p1.getY() - p2.getY());
 
         boolean closeY = yDistance <= 120;
 
@@ -253,9 +259,18 @@ public class Game implements KeyListener, ActionListener, MouseListener {
 
                 if (canBeHit(p2)){
                     p2.takeDamage(PUNCH_DAMAGE);
-                    hitX = (p1.getX() + p2.getX()) / 2 + 115;
-                    hitY = (p1.getY() + p2.getY()) / 2 + 100;
-                    hitTimer = HIT_DURATION;
+
+                    effectX = (p1.getX() + p2.getX()) / 2 + 115;
+                    effectY = (p1.getY() + p2.getY()) / 2 + 100;
+                    effectTimer = EFFECT_DURATION;
+                    effectType = "punch";
+
+                    // screen shake
+                    shakeTimer = 6;
+                    shakeStrength = 6;
+
+                    // knockback
+                    p2.applyKnockback(8, p1.isFacingRight());
                     System.out.println("P1 punched P2 (-" + PUNCH_DAMAGE + " HP)");
                 } else {
                     System.out.println("P2 dodged!");
@@ -266,9 +281,17 @@ public class Game implements KeyListener, ActionListener, MouseListener {
             } else if (p1.getCurrentAction().equals("kick") && xDistance <= KICK_RANGE) {
 
                 if (canBeHit(p2)) {
-                    hitX = (p1.getX() + p2.getX()) / 2 + 115;
-                    hitY = (p1.getY() + p2.getY()) / 2 + 100;
-                    hitTimer = HIT_DURATION;
+                    p2.takeDamage(KICK_DAMAGE);
+
+                    effectX = (p1.getX() + p2.getX()) / 2 + 115;
+                    effectY = p2.getY() + 180;
+                    effectTimer = EFFECT_DURATION;
+                    effectType = "kick";
+
+                    shakeTimer = 10;
+                    shakeStrength = 10;
+
+                    p2.applyKnockback(14, p1.isFacingRight());
                     p2.takeDamage(KICK_DAMAGE);
                     System.out.println("P1 kicked P2 (-" + KICK_DAMAGE + " HP)");
                 } else {
@@ -285,9 +308,15 @@ public class Game implements KeyListener, ActionListener, MouseListener {
             if (p2.getCurrentAction().equals("punch") && xDistance <= PUNCH_RANGE) {
 
                 if (canBeHit(p1)) {
-                    hitX = (p1.getX() + p2.getX()) / 2 + 115;
-                    hitY = (p1.getY() + p2.getY()) / 2 + 100;
-                    hitTimer = HIT_DURATION;
+                    effectX = (p1.getX() + p2.getX()) / 2 + 115;
+                    effectY = (p1.getY() + p2.getY()) / 2 + 100;
+                    effectTimer = EFFECT_DURATION;
+                    effectType = "punch";
+
+                    shakeTimer = 6;
+                    shakeStrength = 6;
+
+                    p1.applyKnockback(8, p2.isFacingRight());
                     p1.takeDamage(PUNCH_DAMAGE);
                     System.out.println("P2 punched P1 (-" + PUNCH_DAMAGE + " HP)");
                 } else {
@@ -299,9 +328,19 @@ public class Game implements KeyListener, ActionListener, MouseListener {
             } else if (p2.getCurrentAction().equals("kick") && xDistance <= KICK_RANGE) {
 
                 if (canBeHit(p1)) {
-                    hitX = (p1.getX() + p2.getX()) / 2 + 115;
-                    hitY = (p1.getY() + p2.getY()) / 2 + 100;
-                    hitTimer = HIT_DURATION;
+                    p2.takeDamage(KICK_DAMAGE);
+
+                    effectX = (p1.getX() + p2.getX()) / 2 + 115;
+                    effectY = p2.getY() + 180; // lower = leg impact
+                    effectTimer = EFFECT_DURATION;
+                    effectType = "kick";
+
+// stronger shake
+                    shakeTimer = 10;
+                    shakeStrength = 10;
+
+// stronger knockback
+                    p2.applyKnockback(14, p1.isFacingRight());
                     p1.takeDamage(KICK_DAMAGE);
                     System.out.println("P2 kicked P1 (-" + KICK_DAMAGE + " HP)");
                 } else {

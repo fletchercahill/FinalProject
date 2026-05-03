@@ -267,16 +267,70 @@ public class GameView extends JFrame {
 
                 g2.translate(-shakeX, -shakeY);
             }
-            if (backend.hitTimer > 0) {
-                int size = 40 + (10 - backend.hitTimer) * 5; // grows slightly
+            if (backend.effectTimer > 0) {
+                int size = 40 + (10 - backend.effectTimer) * 5; // grows slightly
 
                 // outer glow
                 g2.setColor(new Color(255, 200, 50, 150));
-                g2.fillOval(backend.hitX - size/2, backend.hitY - size/2, size, size);
+                g2.fillOval(backend.effectX - size/2, backend.effectY - size/2, size, size);
 
                 // inner flash
                 g2.setColor(new Color(255, 255, 255, 220));
-                g2.fillOval(backend.hitX - 10, backend.hitY - 10, 20, 20);
+                g2.fillOval(backend.effectX - 10, backend.effectY - 10, 20, 20);
+            }
+            int shakeX = 0;
+            int shakeY = 0;
+
+            if (backend.shakeTimer > 0) {
+                shakeX = (int)(Math.random()*backend.shakeStrength*2 - backend.shakeStrength);
+                shakeY = (int)(Math.random()*backend.shakeStrength*2 - backend.shakeStrength);
+            }
+
+            g2.translate(shakeX, shakeY);
+            if (backend.effectTimer > 0 && backend.effectType.equals("punch")) {
+
+                int t = backend.effectTimer;
+                int size = 30 + (12 - t) * 6;
+
+                // outer flame
+                g2.setColor(new Color(255, 120, 0, 180));
+                g2.fillOval(backend.effectX - size/2, backend.effectY - size/2, size, size);
+
+                // inner hot core
+                g2.setColor(new Color(255, 200, 50, 220));
+                g2.fillOval(backend.effectX - 10, backend.effectY - 10, 20, 20);
+
+                // sparks
+                for (int i = 0; i < 5; i++) {
+                    int sx = backend.effectX + (int)(Math.random()*40 - 20);
+                    int sy = backend.effectY + (int)(Math.random()*40 - 20);
+
+                    g2.setColor(new Color(255, 80, 0, 200));
+                    g2.fillRect(sx, sy, 4, 4);
+                }
+            }
+            if (backend.effectTimer > 0 && backend.effectType.equals("kick")) {
+
+                int t = backend.effectTimer;
+
+                for (int i = 0; i < 6; i++) {
+                    int size = 30 + i * 10 - t * 2;
+                    int alpha = 120 - i * 15;
+
+                    if (alpha > 0) {
+                        g2.setColor(new Color(100, 100, 100, alpha));
+
+                        int offsetX = (int)(Math.random()*30 - 15);
+                        int offsetY = (int)(Math.random()*20 - 10);
+
+                        g2.fillOval(
+                                backend.effectX + offsetX - size/2,
+                                backend.effectY + offsetY - size/2,
+                                size,
+                                size
+                        );
+                    }
+                }
             }
 
         } finally {

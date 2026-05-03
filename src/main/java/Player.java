@@ -21,7 +21,7 @@ public class Player {
     private static final int MOVE_SPEED = 10;
     private static final int JUMP_HEIGHT = 150;
 
-
+    private double velocityX = 0;
     private double velocityY = 0;
     private static final double GRAVITY = 1.0;
     private static final double JUMP_STRENGTH = -15; // negative = upward
@@ -57,6 +57,16 @@ public class Player {
         // When the character reaches a height of 100, they stop accelerating upwards
         if (jumpStartY - positionY >= 100) {
             velocityY = 0; // stop going up
+        }
+        // apply horizontal knockback movement
+        positionX += velocityX;
+
+        // friction (slows knockback over time)
+        velocityX *= 0.8;
+
+        // stop tiny sliding
+        if (Math.abs(velocityX) < 0.5) {
+            velocityX = 0;
         }
         if (blasting) {
             blastTimer--;
@@ -151,8 +161,18 @@ public class Player {
     }
     public boolean isBlasting() { return blasting; }
     public int getBlastRadius() { return blastRadius; }
+    public void applyKnockback(double force, boolean attackerFacingRight) {
 
+        // push away from attacker
+        if (attackerFacingRight) {
+            velocityX = force;   // attacker on left → push right
+        } else {
+            velocityX = -force;  // attacker on right → push left
+        }
 
+        // small upward bump (makes hits feel better)
+        velocityY = -6;
+    }
 
 
 
