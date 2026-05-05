@@ -89,7 +89,61 @@ public class Game implements KeyListener, ActionListener, MouseListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        keysPressed.add(e.getKeyCode());
+        int key = e.getKeyCode();
+
+        // Only trigger actions ONCE
+        if (!keysPressed.contains(key)) {
+
+            // ---- PLAYER 1 ----
+            if (key == KeyEvent.VK_F && p1ActionCounter == 0) {
+                p1.punch();
+                p1ActionCounter = 30;
+                p1AttackHit = false;
+            }
+
+            if (key == KeyEvent.VK_G && p1ActionCounter == 0) {
+                p1.kick();
+                p1ActionCounter = 30;
+                p1AttackHit = false;
+            }
+
+            if (key == KeyEvent.VK_E && p1ActionCounter == 0) {
+                p1.blast();
+                p1ActionCounter = 30;
+                p1AttackHit = false;
+            }
+
+            if (key == KeyEvent.VK_Q && p1ActionCounter == 0) {
+                p1.dodge();
+                p1ActionCounter = 30;
+            }
+
+            // ---- PLAYER 2 ----
+            if (key == KeyEvent.VK_SHIFT && p2ActionCounter == 0) {
+                p2.punch();
+                p2ActionCounter = 30;
+                p2AttackHit = false;
+            }
+
+            if (key == KeyEvent.VK_ENTER && p2ActionCounter == 0) {
+                p2.kick();
+                p2ActionCounter = 30;
+                p2AttackHit = false;
+            }
+
+            if (key == KeyEvent.VK_SLASH && p2ActionCounter == 0) {
+                p2.blast();
+                p2ActionCounter = 30;
+                p2AttackHit = false;
+            }
+
+            if (key == KeyEvent.VK_QUOTE && p2ActionCounter == 0) {
+                p2.dodge();
+                p2ActionCounter = 30;
+            }
+        }
+
+        keysPressed.add(key);
     }
 
     @Override
@@ -123,55 +177,16 @@ public class Game implements KeyListener, ActionListener, MouseListener {
             return;
         }
 
-        // -------- RYU --------
+        // Movement (continuous)
         if (keysPressed.contains(KeyEvent.VK_A)) p1.moveLeft();
         if (keysPressed.contains(KeyEvent.VK_D)) p1.moveRight();
         if (keysPressed.contains(KeyEvent.VK_W)) p1.jump();
 
-        if (keysPressed.contains(KeyEvent.VK_W)) {
-            p1.jump();
-        }
-
-        // Player 1 actions
-        if (keysPressed.contains(KeyEvent.VK_F)) {
-            p1.punch();
-            p1ActionCounter = 30;
-            p1AttackHit = false;
-        }
-
-        if (keysPressed.contains(KeyEvent.VK_G)) {
-            p1.kick();
-            p1ActionCounter = 30;
-            p1AttackHit = false;
-        }
-        if (keysPressed.contains(KeyEvent.VK_SLASH)) {
-            p2.blast();
-            p1ActionCounter = 30;
-        }
-        if (keysPressed.contains(KeyEvent.VK_E)) {
-            p1.blast();
-            p1ActionCounter = 30;
-        }
-
-        if (keysPressed.contains(KeyEvent.VK_Q)) {
-            p1.dodge();
-            p1ActionCounter = 30;
-        }
-
-        // ---- PLAYER 2 ----
         if (keysPressed.contains(KeyEvent.VK_LEFT)) p2.moveLeft();
         if (keysPressed.contains(KeyEvent.VK_RIGHT)) p2.moveRight();
         if (keysPressed.contains(KeyEvent.VK_UP)) p2.jump();
 
-        if (keysPressed.contains(KeyEvent.VK_SHIFT)) {
-            p2.punch();
-            p2ActionCounter = 30;
-            p2AttackHit = false;
-        }
-        if (keysPressed.contains(KeyEvent.VK_UP)) {
-            p2.jump();
-        }
-        // Make players face each other
+        // Face each other
         if (p1.getX() < p2.getX()) {
             p1.setFacingRight(true);
             p2.setFacingRight(false);
@@ -179,49 +194,26 @@ public class Game implements KeyListener, ActionListener, MouseListener {
             p1.setFacingRight(false);
             p2.setFacingRight(true);
         }
+
         p1.update();
         p2.update();
-        window.repaint();
 
-        if (keysPressed.contains(KeyEvent.VK_ENTER)) {
-            p2.kick();
-            p2ActionCounter = 30;
+        checkAttacks();
+
+        if (effectTimer > 0) effectTimer--;
+
+        // Reset actions
+        if (p1ActionCounter > 0 && --p1ActionCounter == 0) {
+            p1.resetAction();
+            p1AttackHit = false;
+        }
+
+        if (p2ActionCounter > 0 && --p2ActionCounter == 0) {
+            p2.resetAction();
             p2AttackHit = false;
         }
 
-        if (keysPressed.contains(KeyEvent.VK_QUOTE)) {
-            p2.dodge();
-            p2ActionCounter = 30;
-        }
-
-        checkAttacks();
-        if (effectTimer > 0) {
-            effectTimer--;
-        }
-
-        if (p1.getHealth() <= 0 || p2.getHealth() <= 0) {
-            gameState = STATE_END;
-        }
-
-        // Reset Player 1 action
-        if (p1ActionCounter > 0) {
-            p1ActionCounter--;
-
-            if (p1ActionCounter == 0) {
-                p1.resetAction();
-                p1AttackHit = false;
-            }
-        }
-
-        // Reset Player 2 action after 1.5 seconds
-        if (p2ActionCounter > 0) {
-            p2ActionCounter--;
-
-            if (p2ActionCounter == 0) {
-                p2.resetAction();
-                p2AttackHit = false;
-            }
-        }
+        // Game over
         if (!gameOver) {
             if (p1.getHealth() <= 0) {
                 gameOver = true;
@@ -231,6 +223,7 @@ public class Game implements KeyListener, ActionListener, MouseListener {
                 winner = "Player 1 Wins!";
             }
         }
+
         window.repaint();
     }
     private boolean isInFront(Player attacker, Player target) {

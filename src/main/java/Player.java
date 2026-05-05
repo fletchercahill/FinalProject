@@ -1,11 +1,8 @@
 public class Player {
-    private int health = 50;
+    private int health = 100;
     private int positionX;
     private int positionY;
     private boolean facingRight = true;
-    private static final int PUNCH_DAMAGE = 4;
-    private static final int KICK_DAMAGE = 5;
-    private static final int BLAST_DAMAGE = 20;
     private int jumpStartY;
     private int actionTimer = 0;
     private boolean isJumping = false;

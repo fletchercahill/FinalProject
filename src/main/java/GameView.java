@@ -9,11 +9,9 @@ public class GameView extends JFrame {
 
     private Game backend;
 
-    private final Image idleImage;
-    private final Image punchImage;
-    private final Image kickImage;
+
     private final Image bgImage;
-    private final Image playerImage;
+
     private final Image ryuIdleImage;
     private final Image ryuPunchImage;
     private final Image ryuKickImage;
@@ -27,7 +25,6 @@ public class GameView extends JFrame {
     private final Image ryuIcon;
     private final Image kenIcon;
 
-    private final Image bgImage;
 
     // ✅ NEW: controls image
     private final Image controlsImage;
