@@ -1,5 +1,5 @@
 public class Player {
-    private int health = 100;
+    private int health = 50;
     private int positionX;
     private int positionY;
     private boolean facingRight = true;

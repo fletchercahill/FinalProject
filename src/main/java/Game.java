@@ -40,7 +40,7 @@ public class Game implements KeyListener, ActionListener, MouseListener {
     private static final int PUNCH_RANGE = 160;
     private static final int KICK_RANGE = 190;
 
-    private static final int PUNCH_DAMAGE = 4;
+    private static final int PUNCH_DAMAGE = 6;
     private static final int KICK_DAMAGE = 5;
 
     private HashSet<Integer> keysPressed = new HashSet<>();
