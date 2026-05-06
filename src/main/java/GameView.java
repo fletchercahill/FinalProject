@@ -41,7 +41,7 @@ public class GameView extends JFrame {
         ryuDodgeImage = new ImageIcon("src/main/resources/ryu_dodge.png").getImage();
 
         kenIdleImage = new ImageIcon("src/main/resources/ken.png").getImage();
-        kenPunchImage = new ImageIcon("src/main/resources/ken_punch.png").getImage();
+        kenPunchImage = new ImageIcon("src/main/resources/Ken_punch.png").getImage();
         kenKickImage = new ImageIcon("src/main/resources/ken_kick.png").getImage();
         kenDodgeImage = new ImageIcon("src/main/resources/ken_dodge.png").getImage();
 
@@ -159,12 +159,15 @@ public class GameView extends JFrame {
                 if ("punch".equals(action)) img = ryuPunchImage;
                 else if ("kick".equals(action)) img = ryuKickImage;
                 else if ("dodge".equals(action)) img = ryuDodgeImage;
+                int x = backend.p1.getX();
+                int y = backend.p1.getY();
 
-                g2.drawImage(img,
-                        backend.p1.getX(),
-                        backend.p1.getY(),
-                        230, 250,
-                        this);
+                if (backend.p1.isFacingRight()) {
+                    g2.drawImage(img, x, y, 230, 250, this);
+                } else {
+                    g2.drawImage(img, x + 230, y, -230, 250, this);
+                }
+
             }
 
             // -------- PLAYER 2 --------
@@ -176,11 +179,14 @@ public class GameView extends JFrame {
                 else if ("kick".equals(action)) img = kenKickImage;
                 else if ("dodge".equals(action)) img = kenDodgeImage;
 
-                g2.drawImage(img,
-                        backend.p2.getX(),
-                        backend.p2.getY(),
-                        230, 250,
-                        this);
+                int x = backend.p2.getX();
+                int y = backend.p2.getY();
+
+                if (backend.p2.isFacingRight()) {
+                    g2.drawImage(img, x, y, 230, 250, this);
+                } else {
+                    g2.drawImage(img, x + 230, y, -230, 250, this);
+                }
             }
 
             // -------- BLAST (shared) --------

@@ -24,6 +24,7 @@ public class Game implements KeyListener, ActionListener, MouseListener {
 
     private int p1ActionCounter = 0;
     private int p2ActionCounter = 0;
+
     public int effectX = 0;
     public int effectY = 0;
     public int effectTimer = 0;
@@ -350,7 +351,7 @@ public class Game implements KeyListener, ActionListener, MouseListener {
 
         int distance = Math.abs(p1.getX() - p2.getX());
 
-        if (p1.isBlasting() && !p1AttackHit && isInFront(p1, p2)) {
+        if (p1.isBlasting() && !p1.hasBlastHit() && isInFront(p1, p2)) {
             if (distance <= p1.getBlastRadius()) {
 
                 if (canBeHit(p2)) {
@@ -358,11 +359,11 @@ public class Game implements KeyListener, ActionListener, MouseListener {
                     System.out.println("P1 BLAST hit P2 (-20 HP)");
                 }
 
-                p1AttackHit = true;
+                p1.setBlastHit(true);
             }
         }
 
-        if (p2.isBlasting() && !p2AttackHit && isInFront(p2, p1)) {
+        if (p2.isBlasting() && !p2.hasBlastHit() && isInFront(p2, p1)) {
             if (distance <= p2.getBlastRadius()) {
 
                 if (canBeHit(p1)) {
@@ -370,7 +371,7 @@ public class Game implements KeyListener, ActionListener, MouseListener {
                     System.out.println("P2 BLAST hit P1 (-20 HP)");
                 }
 
-                p2AttackHit = true;
+                p2.setBlastHit(true);
             }
         }
     }

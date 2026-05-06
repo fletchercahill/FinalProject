@@ -7,6 +7,7 @@ public class Player {
     private int actionTimer = 0;
     private boolean isJumping = false;
     private boolean blastUsed = false;
+    private boolean blastHit = false;
     private boolean blasting = false;
     private int blastTimer = 0;
     private int blastRadius = 0;
@@ -27,6 +28,14 @@ public class Player {
     public Player(int x, int y) {
         positionX = x;
         positionY = y;
+    }
+
+    public boolean hasBlastHit() {
+        return blastHit;
+    }
+
+    public void setBlastHit(boolean value) {
+        blastHit = value;
     }
 
     public void moveLeft() {
@@ -73,6 +82,7 @@ public class Player {
                 blasting = false;
                 blastRadius = 0;
                 currentAction = "idle";
+                blastHit = false;
             }
         }// handle action timer
         if (actionTimer > 0) {
