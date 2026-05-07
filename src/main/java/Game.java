@@ -62,14 +62,14 @@ public class Game implements KeyListener, ActionListener, MouseListener {
     }
 
     private int getRandomSpawnTime() {
-        int min = 20 * 60;
-        int max = 30 * 60;
+        int min = 5 * 60;
+        int max = 10 * 60;
         return min + (int)(Math.random() * (max - min));
     }
 
     private int getCooldownTime() {
-        int min = 10 * 60;
-        int max = 20 * 60;
+        int min = 5 * 60;
+        int max = 10 * 60;
         return min + (int)(Math.random() * (max - min));
     }
 
