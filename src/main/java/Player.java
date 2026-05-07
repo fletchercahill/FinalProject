@@ -41,7 +41,12 @@ public class Player {
     public void moveLeft() {
         if (positionX >= 0){
             positionX -= MOVE_SPEED;
-            currentAction = "idle";
+        }
+    }
+
+    public void moveRight() {
+        if (positionX <= 1000){
+            positionX += MOVE_SPEED;
         }
     }
     public boolean isJumping() {
@@ -93,12 +98,7 @@ public class Player {
         }
     }
 
-    public void moveRight() {
-        if (positionX <= 1000){
-            positionX += MOVE_SPEED;
-            currentAction = "idle";
-        }
-    }
+
 
     public void jump() {
         if (!isJumping) {
