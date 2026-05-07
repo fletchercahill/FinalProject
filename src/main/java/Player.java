@@ -13,6 +13,7 @@ public class Player {
     private boolean blasting = false;
     private int blastTimer = 0;
     private int blastRadius = 0;
+    private boolean hasPowerUp;
     private static final int MAX_BLAST_TIME = 40;
     private String name;
 
@@ -100,12 +101,6 @@ public class Player {
         }
     }
 
-    public void moveRight() {
-        if (positionX <= 1000){
-            positionX += MOVE_SPEED;
-            currentAction = "idle";
-        }
-    }
 
     public void jump() {
         if (!isJumping) {
@@ -115,14 +110,7 @@ public class Player {
             jumpStartY = positionY;
         }
     }
-    public void blast() {
-        if (!blasting) {
-            blasting = true;
-            blastTimer = MAX_BLAST_TIME;
-            blastRadius = 0;
-            currentAction = "blast";
-        }
-    }
+
 
     public void kick() {
         currentAction = "kick";
