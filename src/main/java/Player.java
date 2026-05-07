@@ -2,12 +2,12 @@ public class Player {
     private int health = 100;
     private int positionX;
     private int positionY;
-
-
+    private boolean facingRight = true;
     private int jumpStartY;
     private int actionTimer = 0;
     private boolean isJumping = false;
     private boolean blastUsed = false;
+    private boolean blastHit = false;
     private boolean blasting = false;
     private int blastTimer = 0;
     private int blastRadius = 0;
@@ -19,7 +19,7 @@ public class Player {
     private static final int MOVE_SPEED = 10;
     private static final int JUMP_HEIGHT = 150;
 
-
+    private double velocityX = 0;
     private double velocityY = 0;
     private static final double GRAVITY = 1.0;
     private static final double JUMP_STRENGTH = -15; // negative = upward
@@ -30,11 +30,22 @@ public class Player {
         positionY = y;
     }
 
+    public boolean hasBlastHit() {
+        return blastHit;
+    }
+
+    public void setBlastHit(boolean value) {
+        blastHit = value;
+    }
+
     public void moveLeft() {
         if (positionX >= 0){
             positionX -= MOVE_SPEED;
             currentAction = "idle";
         }
+    }
+    public boolean isJumping() {
+        return isJumping;
     }
     public void update() {
         // apply gravity
@@ -53,6 +64,16 @@ public class Player {
         if (jumpStartY - positionY >= 100) {
             velocityY = 0; // stop going up
         }
+        // apply horizontal knockback movement
+        positionX += velocityX;
+
+        // friction (slows knockback over time)
+        velocityX *= 0.8;
+
+        // stop tiny sliding
+        if (Math.abs(velocityX) < 0.5) {
+            velocityX = 0;
+        }
         if (blasting) {
             blastTimer--;
             blastRadius += 20; // how fast it expands
@@ -61,6 +82,7 @@ public class Player {
                 blasting = false;
                 blastRadius = 0;
                 currentAction = "idle";
+                blastHit = false;
             }
         }// handle action timer
         if (actionTimer > 0) {
@@ -86,14 +108,7 @@ public class Player {
             jumpStartY = positionY;
         }
     }
-    public void blast() {
-        if (!blasting) {
-            blasting = true;
-            blastTimer = MAX_BLAST_TIME;
-            blastRadius = 0;
-            currentAction = "blast";
-        }
-    }
+
 
     public void kick() {
         currentAction = "kick";
@@ -131,18 +146,40 @@ public class Player {
 
     // ---- Visual walking effect ----
 
-    public void useBlast() {
+    public void blast() {
         if (!blastUsed) {
             System.out.println("Player uses special blast!");
+            blasting = true;
+            blastTimer = MAX_BLAST_TIME;
+            blastRadius = 0;
+            currentAction = "blast";
             blastUsed = true;
         } else {
             System.out.println("Blast already used!");
         }
     }
+    // Checks if a player is facing right to determine if it needs to be reflected
+    public boolean isFacingRight() {
+        return facingRight;
+    }
+
+    public void setFacingRight(boolean facingRight) {
+        this.facingRight = facingRight;
+    }
     public boolean isBlasting() { return blasting; }
     public int getBlastRadius() { return blastRadius; }
+    public void applyKnockback(double force, boolean attackerFacingRight) {
 
+        // push away from attacker
+        if (attackerFacingRight) {
+            velocityX = force;   // attacker on left → push right
+        } else {
+            velocityX = -force;  // attacker on right → push left
+        }
 
+        // small upward bump (makes hits feel better)
+        velocityY = -6;
+    }
 
 
 
