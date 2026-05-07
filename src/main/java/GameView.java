@@ -28,6 +28,7 @@ public class GameView extends JFrame {
 
     // ✅ NEW: controls image
     private final Image controlsImage;
+    private final Image powerUpImage;
 
     private HealthBar p1HealthBar;
     private HealthBar p2HealthBar;
@@ -52,6 +53,7 @@ public class GameView extends JFrame {
 
         // ✅ LOAD YOUR CONTROLS IMAGE
         controlsImage = new ImageIcon("src/main/resources/Controls.png").getImage();
+        powerUpImage = new ImageIcon("src/main/resources/powerUp.png").getImage();
 
         p1HealthBar = new HealthBar(100);
         p2HealthBar = new HealthBar(100);
@@ -60,6 +62,7 @@ public class GameView extends JFrame {
         this.setTitle("Final Project");
         this.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         this.setVisible(true);
+
         createBufferStrategy(2);
     }
     private void drawInstructionsScreen(Graphics2D g2) {
@@ -71,6 +74,7 @@ public class GameView extends JFrame {
         // draw your Controls.png full screen
         g2.drawImage(controlsImage, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, this);
     }
+
     private void drawHealthBars(Graphics2D g2) {
         int barWidth = 300;
         int barHeight = 25;
@@ -101,6 +105,69 @@ public class GameView extends JFrame {
 
         g2.setColor(Color.BLACK);
         g2.drawRect(WINDOW_WIDTH - 370, 50, barWidth, barHeight);
+    }
+
+    private void drawPlayers(Graphics2D g2) {
+        Image img1 = ryuIdleImage;
+        String action1 = backend.p1.getCurrentAction();
+
+        if ("punch".equals(action1)) img1 = ryuPunchImage;
+        else if ("kick".equals(action1)) img1 = ryuKickImage;
+        else if ("dodge".equals(action1)) img1 = ryuDodgeImage;
+
+        g2.drawImage(img1, backend.p1.getX(), backend.p1.getY(), 230, 250, this);
+
+        Image img2 = kenIdleImage;
+        String action2 = backend.p2.getCurrentAction();
+
+        if ("punch".equals(action2)) img2 = kenPunchImage;
+        else if ("kick".equals(action2)) img2 = kenKickImage;
+        else if ("dodge".equals(action2)) img2 = kenDodgeImage;
+
+        g2.drawImage(img2, backend.p2.getX(), backend.p2.getY(), 230, 250, this);
+    }
+
+    private void drawBlast(Graphics2D g2) {
+        Player blastingPlayer = null;
+
+        if (backend.p1 != null && backend.p1.isBlasting()) {
+            blastingPlayer = backend.p1;
+        } else if (backend.p2 != null && backend.p2.isBlasting()) {
+            blastingPlayer = backend.p2;
+        }
+
+        if (blastingPlayer != null) {
+            int r = blastingPlayer.getBlastRadius();
+
+            int cx = blastingPlayer.getX() + 115;
+            int cy = blastingPlayer.getY() + 125;
+
+            g2.setColor(new Color(255, 0, 0, 120));
+            g2.fillOval(cx - r / 2, cy - r / 2, r, r);
+
+            g2.setColor(new Color(255, 0, 0, 60));
+            g2.fillOval(cx - r, cy - r, r * 2, r * 2);
+        }
+    }
+    private void drawPowerUp(Graphics2D g2) {
+        PowerUp p = backend.getPowerUp();
+
+        if (p != null) {
+            g2.drawImage(powerUpImage,
+                    p.getX(),
+                    p.getY(),
+                    p.getSize(),
+                    p.getSize(),
+                    this);
+        }
+    }
+
+    private void drawPowerUpWarning(Graphics2D g2) {
+        if (backend.shouldShowPowerUpWarning()) {
+            g2.setColor(new Color(255, 255, 0, 200));
+            g2.setFont(new Font("Arial", Font.BOLD, 32));
+            g2.drawString("POWER-UP INCOMING!", 410, 140);
+        }
     }
     private void drawWelcomeScreen(Graphics2D g2) {
         g2.setColor(new Color(240, 220, 180));

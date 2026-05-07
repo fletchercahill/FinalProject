@@ -1,7 +1,9 @@
 public class Player {
+
     private int health = 100;
     private int positionX;
     private int positionY;
+
     private boolean facingRight = true;
     private int jumpStartY;
     private int actionTimer = 0;
@@ -98,7 +100,12 @@ public class Player {
         }
     }
 
-
+    public void moveRight() {
+        if (positionX <= 1000){
+            positionX += MOVE_SPEED;
+            currentAction = "idle";
+        }
+    }
 
     public void jump() {
         if (!isJumping) {
@@ -108,12 +115,22 @@ public class Player {
             jumpStartY = positionY;
         }
     }
-
+    public void blast() {
+        if (!blasting) {
+            blasting = true;
+            blastTimer = MAX_BLAST_TIME;
+            blastRadius = 0;
+            currentAction = "blast";
+        }
+    }
 
     public void kick() {
         currentAction = "kick";
         actionTimer = 25;
         System.out.println("Player kicks!");
+    }
+    public void givePowerUp() {
+        hasPowerUp = true;
     }
 
     public void punch() {

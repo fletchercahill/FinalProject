@@ -46,9 +46,18 @@ public class Game implements KeyListener, ActionListener, MouseListener {
 
     private HashSet<Integer> keysPressed = new HashSet<>();
 
+    // Power-up system
+    private PowerUp powerUp;
+    private int powerUpSpawnTimer = 0;
+    private int nextSpawnTime = 0;
+    private int powerUpCooldownTimer = 0;
+
     public Game() {
         p1 = new Player(100, 500);
         p2 = new Player(900, 500);
+
+        powerUp = null;
+        nextSpawnTime = getRandomSpawnTime();
 
         window = new GameView(this);
         window.addKeyListener(this);
@@ -57,9 +66,49 @@ public class Game implements KeyListener, ActionListener, MouseListener {
         // Continually updates the screen allowing for jump to work
     }
 
+    private int getRandomSpawnTime() {
+        int min = 20 * 60;
+        int max = 30 * 60;
+        return min + (int)(Math.random() * (max - min));
+    }
+
+    private int getCooldownTime() {
+        int min = 10 * 60;
+        int max = 20 * 60;
+        return min + (int)(Math.random() * (max - min));
+    }
+
+    public boolean shouldShowPowerUpWarning() {
+        int warningTime = 3 * 60; // last 3 seconds before spawn
+
+        return gameState == STATE_FIGHT &&
+                powerUp == null &&
+                powerUpCooldownTimer == 0 &&
+                nextSpawnTime - powerUpSpawnTimer <= warningTime &&
+                powerUpSpawnTimer % 30 < 15; // blinking
+    }
+
+    public PowerUp getPowerUp() {
+        return powerUp;
+    }
+
     public int getGameState() {
         return gameState;
     }
+
+    @Override
+    public void keyTyped(KeyEvent e) {}
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        keysPressed.add(e.getKeyCode());
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        keysPressed.remove(e.getKeyCode());
+    }
+
     @Override
     public void mouseClicked(MouseEvent e) {
         int x = e.getX();
@@ -85,6 +134,12 @@ public class Game implements KeyListener, ActionListener, MouseListener {
 
         window.repaint();
     }
+
+    @Override public void mousePressed(MouseEvent e) {}
+    @Override public void mouseReleased(MouseEvent e) {}
+    @Override public void mouseEntered(MouseEvent e) {}
+    @Override public void mouseExited(MouseEvent e) {}
+
     @Override
     public void keyTyped(KeyEvent e) {}
 
@@ -198,6 +253,41 @@ public class Game implements KeyListener, ActionListener, MouseListener {
 
         p1.update();
         p2.update();
+
+        // Power-up system
+        if (powerUp == null) {
+            if (powerUpCooldownTimer > 0) {
+                powerUpCooldownTimer--;
+            } else {
+                powerUpSpawnTimer++;
+
+                if (powerUpSpawnTimer >= nextSpawnTime) {
+                    int spawnX = (int)(Math.random() * 1000);
+                    int spawnY = (int)(Math.random() * 400);
+
+                    powerUp = new PowerUp(spawnX, spawnY);
+
+                    powerUpSpawnTimer = 0;
+                    nextSpawnTime = getRandomSpawnTime();
+                }
+            }
+        }
+
+        if (powerUp != null) {
+            powerUp.update();
+
+            if (powerUp.collides(p1)) {
+                p1.givePowerUp();
+                powerUp = null;
+                powerUpCooldownTimer = getCooldownTime();
+            }
+
+            else if (powerUp.collides(p2)) {
+                p2.givePowerUp();
+                powerUp = null;
+                powerUpCooldownTimer = getCooldownTime();
+            }
+        }
 
         checkAttacks();
 
