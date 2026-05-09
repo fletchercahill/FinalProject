@@ -26,6 +26,7 @@ public class GameView extends JFrame {
 
     private final Image controlsImage;
     private final Image powerUpImage;
+    private final Image logoImage;
 
     private HealthBar p1HealthBar;
     private HealthBar p2HealthBar;
@@ -71,7 +72,10 @@ public class GameView extends JFrame {
                 new ImageIcon("src/main/resources/Controls.png").getImage();
 
         powerUpImage =
-                new ImageIcon("src/main/resources/power up.png").getImage();
+                new ImageIcon("src/main/resources/powerUp.png").getImage();
+
+        logoImage =
+                new ImageIcon("src/main/resources/Illustration.png").getImage();
 
         p1HealthBar = new HealthBar(100);
         p2HealthBar = new HealthBar(100);
@@ -96,20 +100,12 @@ public class GameView extends JFrame {
 
         try {
 
-            // ---------------- WELCOME ----------------
-
-            if (backend.getGameState() ==
-                    Game.STATE_WELCOME) {
-
+            if (backend.getGameState() == Game.STATE_WELCOME) {
                 drawWelcomeScreen(g2);
                 return;
             }
 
-            // ---------------- INSTRUCTIONS ----------------
-
-            if (backend.getGameState() ==
-                    Game.STATE_INSTRUCTIONS) {
-
+            if (backend.getGameState() == Game.STATE_INSTRUCTIONS) {
                 drawInstructionsScreen(g2);
                 return;
             }
@@ -131,8 +127,6 @@ public class GameView extends JFrame {
             }
 
             g2.translate(shakeX, shakeY);
-
-            // ---------------- BACKGROUND ----------------
 
             g2.setColor(Color.WHITE);
 
@@ -172,10 +166,6 @@ public class GameView extends JFrame {
         }
     }
 
-    // =====================================================
-    // WELCOME SCREEN
-    // =====================================================
-
     private void drawWelcomeScreen(Graphics2D g2) {
 
         g2.setColor(new Color(240, 220, 180));
@@ -194,15 +184,34 @@ public class GameView extends JFrame {
 
         int titleX = (WINDOW_WIDTH - fm.stringWidth(title)) / 2;
 
-        g2.drawString(title, titleX, 100);
+        g2.drawString(title, titleX, 90);
 
-        // ---------- FIGHT BUTTON ----------
+        // ---------- LOGO IMAGE ----------
+
+        int logoWidth = 420;
+        int logoHeight = 420;
+
+        int logoX = (WINDOW_WIDTH - logoWidth) / 2;
+        int logoY = 80;
+
+        g2.drawImage(
+                logoImage,
+                logoX,
+                logoY,
+                logoWidth,
+                logoHeight,
+                this
+        );
+
+        // ---------- BUTTONS ----------
 
         int buttonWidth = 250;
         int buttonHeight = 60;
 
+        // ---------- FIGHT BUTTON ----------
+
         int fightX = (WINDOW_WIDTH - buttonWidth) / 2;
-        int fightY = 250;
+        int fightY = 500;
 
         g2.setColor(Color.WHITE);
         g2.fillRect(fightX, fightY, buttonWidth, buttonHeight);
@@ -229,7 +238,7 @@ public class GameView extends JFrame {
         // ---------- INSTRUCTIONS BUTTON ----------
 
         int instructionsX = (WINDOW_WIDTH - buttonWidth) / 2;
-        int instructionsY = 400;
+        int instructionsY = 610;
 
         g2.setColor(Color.WHITE);
         g2.fillRect(instructionsX, instructionsY,
@@ -267,10 +276,6 @@ public class GameView extends JFrame {
         );
     }
 
-    // =====================================================
-    // INSTRUCTIONS SCREEN
-    // =====================================================
-
     private void drawInstructionsScreen(Graphics2D g2) {
 
         g2.setColor(Color.BLACK);
@@ -292,17 +297,11 @@ public class GameView extends JFrame {
         );
     }
 
-    // =====================================================
-    // HEALTH BARS
-    // =====================================================
-
     private void drawHealthBars(Graphics2D g2) {
 
         int barWidth = 300;
         int barHeight = 25;
         int iconSize = 50;
-
-        // ---------- P1 ----------
 
         g2.drawImage(
                 ryuIcon,
@@ -345,8 +344,6 @@ public class GameView extends JFrame {
                 barWidth,
                 barHeight
         );
-
-        // ---------- P2 ----------
 
         g2.drawImage(
                 kenIcon,
@@ -391,13 +388,7 @@ public class GameView extends JFrame {
         );
     }
 
-    // =====================================================
-    // PLAYERS
-    // =====================================================
-
     private void drawPlayers(Graphics2D g2) {
-
-        // ---------- P1 ----------
 
         Image img1 = ryuIdleImage;
 
@@ -439,8 +430,6 @@ public class GameView extends JFrame {
             );
         }
 
-        // ---------- P2 ----------
-
         Image img2 = kenIdleImage;
 
         String a2 =
@@ -481,10 +470,6 @@ public class GameView extends JFrame {
             );
         }
     }
-
-    // =====================================================
-    // BLAST
-    // =====================================================
 
     private void drawBlast(Graphics2D g2) {
 
@@ -536,10 +521,6 @@ public class GameView extends JFrame {
         }
     }
 
-    // =====================================================
-    // POWER UP
-    // =====================================================
-
     private void drawPowerUp(Graphics2D g2) {
 
         PowerUp p =
@@ -579,10 +560,6 @@ public class GameView extends JFrame {
             );
         }
     }
-
-    // =====================================================
-    // HIT EFFECTS
-    // =====================================================
 
     private void drawHitEffects(Graphics2D g2) {
 
@@ -652,10 +629,6 @@ public class GameView extends JFrame {
             }
         }
     }
-
-    // =====================================================
-    // GAME OVER
-    // =====================================================
 
     private void drawGameOver(Graphics2D g2) {
 
