@@ -1,6 +1,8 @@
 import javax.swing.*;
 import java.awt.event.*;
 import java.util.HashSet;
+import java.util.ArrayList;
+import java.awt.Rectangle;
 
 public class Game implements KeyListener, ActionListener, MouseListener {
 
@@ -19,7 +21,7 @@ public class Game implements KeyListener, ActionListener, MouseListener {
     public boolean gameOver = false;
 
     private static final int SLEEP_TIME = 16;
-
+    private ArrayList<Fireball> fireballs = new ArrayList<>();
     private int p1ActionCounter = 0;
     private int p2ActionCounter = 0;
 
@@ -168,6 +170,54 @@ public class Game implements KeyListener, ActionListener, MouseListener {
                 p2.dodge();
                 p2ActionCounter = 30;
             }
+            if (key == KeyEvent.VK_1) {
+
+                if (getDistance() >= 500) {
+
+                    p1.fireball();
+
+                    int x;
+
+                    if (p1.isFacingRight()) {
+                        x = p1.getX() + 180;
+                    } else {
+                        x = p1.getX() - 20;
+                    }
+
+                    fireballs.add(
+                            new Fireball(
+                                    x,
+                                    p1.getY() + 110,
+                                    p1.isFacingRight(),
+                                    p1
+                            )
+                    );
+                }
+            }
+            if (key == KeyEvent.VK_BACK_SLASH) {
+
+                if (getDistance() >= 500) {
+
+                    p2.fireball();
+
+                    int x;
+
+                    if (p2.isFacingRight()) {
+                        x = p2.getX() + 180;
+                    } else {
+                        x = p2.getX() - 20;
+                    }
+
+                    fireballs.add(
+                            new Fireball(
+                                    x,
+                                    p2.getY() + 110,
+                                    p2.isFacingRight(),
+                                    p2
+                            )
+                    );
+                }
+            }
         }
 
         keysPressed.add(key);
@@ -220,6 +270,8 @@ public class Game implements KeyListener, ActionListener, MouseListener {
 
         p1.update();
         p2.update();
+        updateFireballs();
+
 
         updatePowerUp();
 
@@ -251,6 +303,75 @@ public class Game implements KeyListener, ActionListener, MouseListener {
         }
 
         window.repaint();
+    }
+    public ArrayList<Fireball> getFireballs() {
+        return fireballs;
+    }
+    private void updateFireballs() {
+
+        for (int i = 0; i < fireballs.size(); i++) {
+
+            Fireball f = fireballs.get(i);
+
+            f.update();
+
+            Rectangle hitbox = f.getBounds();
+
+            Rectangle p1Box = new Rectangle(
+                    p1.getX(),
+                    p1.getY(),
+                    230,
+                    250
+            );
+
+            Rectangle p2Box = new Rectangle(
+                    p2.getX(),
+                    p2.getY(),
+                    230,
+                    250
+            );
+
+            // HIT PLAYER 1
+
+            if (f.getOwner() != p1 &&
+                    hitbox.intersects(p1Box)) {
+
+                if (canBeHit(p1)) {
+
+                    p1.takeDamage(6);
+
+                    p1.applyKnockback(
+                            18,
+                            f.getOwner().isFacingRight()
+                    );
+
+                    f.deactivate();
+                }
+            }
+
+            // HIT PLAYER 2
+
+            if (f.getOwner() != p2 &&
+                    hitbox.intersects(p2Box)) {
+
+                if (canBeHit(p2)) {
+
+                    p2.takeDamage(6);
+
+                    p2.applyKnockback(
+                            18,
+                            f.getOwner().isFacingRight()
+                    );
+
+                    f.deactivate();
+                }
+            }
+        }
+
+        fireballs.removeIf(f -> !f.isActive());
+    }
+    private int getDistance() {
+        return Math.abs(p1.getX() - p2.getX());
     }
 
     private void updatePowerUp() {

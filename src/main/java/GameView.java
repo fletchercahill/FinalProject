@@ -6,7 +6,8 @@ public class GameView extends JFrame {
 
     private static final int WINDOW_WIDTH = 1200;
     private static final int WINDOW_HEIGHT = 800;
-
+    private final Image redBallImage;
+    private final Image blueBallImage;
     private Game backend;
 
     private final Image bgImage;
@@ -49,9 +50,11 @@ public class GameView extends JFrame {
         bgImage = new ImageIcon("src/main/resources/bg.jpg").getImage();
         controlsImage = new ImageIcon("src/main/resources/Controls.png").getImage();
         powerUpImage = new ImageIcon("src/main/resources/powerUp.png").getImage();
-
+        redBallImage = new ImageIcon("src/main/resources/red_ball.png").getImage();
+        blueBallImage = new ImageIcon("src/main/resources/blue_ball.png").getImage();
         p1HealthBar = new HealthBar(100);
         p2HealthBar = new HealthBar(100);
+
 
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setTitle("Final Project");
@@ -97,6 +100,7 @@ public class GameView extends JFrame {
             drawPowerUp(g2);
             drawPowerUpWarning(g2);
             drawPlayers(g2);
+            drawFireballs(g2);
             drawBlast(g2);
             drawHitEffects(g2);
 
@@ -324,6 +328,28 @@ public class GameView extends JFrame {
 
         g2.setFont(new Font("Arial", Font.BOLD, 30));
         g2.drawString("INSTRUCTIONS", 495, 440);
+    }
+    private void drawFireballs(Graphics2D g2) {
+
+        for (Fireball f : backend.getFireballs()) {
+
+            Image img;
+
+            if (f.getOwner() == backend.p1) {
+                img = redBallImage;
+            } else {
+                img = blueBallImage;
+            }
+
+            g2.drawImage(
+                    img,
+                    f.getX(),
+                    f.getY(),
+                    150,
+                    150,
+                    this
+            );
+        }
     }
 
     private void drawGameOver(Graphics2D g2) {
