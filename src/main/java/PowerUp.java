@@ -25,6 +25,7 @@ public class PowerUp
 
         if (y <= 0 || y >= 800 - size)
         {
+        if (y <= 0 || y >= 500 - size) {
             dy *= -1;
         }
     }

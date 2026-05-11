@@ -170,6 +170,10 @@ public class Player
     {
         currentAction = "idle";
     }
+    public void fireball() {
+        currentAction = "fireball";
+        actionTimer = 20;
+    }
 
     public String getCurrentAction()
     {
