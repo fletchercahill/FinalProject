@@ -2,7 +2,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 
-public class GameView extends JFrame {
+public class GameView extends JFrame
+{
 
     private static final int WINDOW_WIDTH = 1200;
     private static final int WINDOW_HEIGHT = 800;
@@ -31,7 +32,8 @@ public class GameView extends JFrame {
     private HealthBar p1HealthBar;
     private HealthBar p2HealthBar;
 
-    public GameView(Game backend) {
+    public GameView(Game backend)
+    {
 
         this.backend = backend;
 
@@ -89,7 +91,8 @@ public class GameView extends JFrame {
     }
 
     @Override
-    public void paint(Graphics g) {
+    public void paint(Graphics g)
+    {
 
         BufferStrategy bf = this.getBufferStrategy();
 
@@ -98,14 +101,17 @@ public class GameView extends JFrame {
         Graphics2D g2 =
                 (Graphics2D) bf.getDrawGraphics();
 
-        try {
+        try
+        {
 
-            if (backend.getGameState() == Game.STATE_WELCOME) {
+            if (backend.getGameState() == Game.stateWelcome)
+            {
                 drawWelcomeScreen(g2);
                 return;
             }
 
-            if (backend.getGameState() == Game.STATE_INSTRUCTIONS) {
+            if (backend.getGameState() == Game.stateInstructions)
+            {
                 drawInstructionsScreen(g2);
                 return;
             }
@@ -113,7 +119,8 @@ public class GameView extends JFrame {
             int shakeX = 0;
             int shakeY = 0;
 
-            if (backend.shakeTimer > 0) {
+            if (backend.shakeTimer > 0)
+            {
 
                 shakeX =
                         (int)(Math.random()
@@ -155,18 +162,22 @@ public class GameView extends JFrame {
 
             g2.translate(-shakeX, -shakeY);
 
-            if (backend.gameOver) {
+            if (backend.gameOver)
+            {
                 drawGameOver(g2);
             }
 
-        } finally {
+        }
+        finally
+        {
 
             g2.dispose();
             bf.show();
         }
     }
 
-    private void drawWelcomeScreen(Graphics2D g2) {
+    private void drawWelcomeScreen(Graphics2D g2)
+    {
 
         g2.setColor(new Color(240, 220, 180));
         g2.fillRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -276,7 +287,8 @@ public class GameView extends JFrame {
         );
     }
 
-    private void drawInstructionsScreen(Graphics2D g2) {
+    private void drawInstructionsScreen(Graphics2D g2)
+    {
 
         g2.setColor(Color.BLACK);
 
@@ -297,7 +309,8 @@ public class GameView extends JFrame {
         );
     }
 
-    private void drawHealthBars(Graphics2D g2) {
+    private void drawHealthBars(Graphics2D g2)
+    {
 
         int barWidth = 300;
         int barHeight = 25;
@@ -388,7 +401,8 @@ public class GameView extends JFrame {
         );
     }
 
-    private void drawPlayers(Graphics2D g2) {
+    private void drawPlayers(Graphics2D g2)
+    {
 
         Image img1 = ryuIdleImage;
 
@@ -407,7 +421,8 @@ public class GameView extends JFrame {
         int x1 = backend.p1.getX();
         int y1 = backend.p1.getY();
 
-        if (backend.p1.isFacingRight()) {
+        if (backend.p1.isFacingRight())
+        {
 
             g2.drawImage(
                     img1,
@@ -418,7 +433,9 @@ public class GameView extends JFrame {
                     this
             );
 
-        } else {
+        }
+        else
+        {
 
             g2.drawImage(
                     img1,
@@ -447,7 +464,8 @@ public class GameView extends JFrame {
         int x2 = backend.p2.getX();
         int y2 = backend.p2.getY();
 
-        if (backend.p2.isFacingRight()) {
+        if (backend.p2.isFacingRight())
+        {
 
             g2.drawImage(
                     img2,
@@ -458,7 +476,9 @@ public class GameView extends JFrame {
                     this
             );
 
-        } else {
+        }
+        else
+        {
 
             g2.drawImage(
                     img2,
@@ -471,22 +491,26 @@ public class GameView extends JFrame {
         }
     }
 
-    private void drawBlast(Graphics2D g2) {
+    private void drawBlast(Graphics2D g2)
+    {
 
         Player blastingPlayer = null;
 
         if (backend.p1 != null &&
-                backend.p1.isBlasting()) {
+                backend.p1.isBlasting())
+        {
 
             blastingPlayer = backend.p1;
 
         } else if (backend.p2 != null &&
-                backend.p2.isBlasting()) {
+                backend.p2.isBlasting())
+        {
 
             blastingPlayer = backend.p2;
         }
 
-        if (blastingPlayer != null) {
+        if (blastingPlayer != null)
+        {
 
             int r =
                     blastingPlayer.getBlastRadius();
@@ -521,12 +545,14 @@ public class GameView extends JFrame {
         }
     }
 
-    private void drawPowerUp(Graphics2D g2) {
+    private void drawPowerUp(Graphics2D g2)
+    {
 
         PowerUp p =
                 backend.getPowerUp();
 
-        if (p != null) {
+        if (p != null)
+        {
 
             g2.drawImage(
                     powerUpImage,
@@ -539,9 +565,11 @@ public class GameView extends JFrame {
         }
     }
 
-    private void drawPowerUpWarning(Graphics2D g2) {
+    private void drawPowerUpWarning(Graphics2D g2)
+    {
 
-        if (backend.shouldShowPowerUpWarning()) {
+        if (backend.shouldShowPowerUpWarning())
+        {
 
             g2.setColor(
                     new Color(255, 255, 0, 200)
@@ -561,10 +589,12 @@ public class GameView extends JFrame {
         }
     }
 
-    private void drawHitEffects(Graphics2D g2) {
+    private void drawHitEffects(Graphics2D g2)
+    {
 
         if (backend.effectTimer > 0 &&
-                backend.effectType.equals("punch")) {
+                backend.effectType.equals("punch"))
+        {
 
             int t = backend.effectTimer;
 
@@ -584,11 +614,13 @@ public class GameView extends JFrame {
         }
 
         if (backend.effectTimer > 0 &&
-                backend.effectType.equals("kick")) {
+                backend.effectType.equals("kick"))
+        {
 
             int t = backend.effectTimer;
 
-            for (int i = 0; i < 6; i++) {
+            for (int i = 0; i < 6; i++)
+            {
 
                 int size =
                         30 + i * 10 - t * 2;
@@ -596,7 +628,8 @@ public class GameView extends JFrame {
                 int alpha =
                         120 - i * 15;
 
-                if (alpha > 0) {
+                if (alpha > 0)
+                {
 
                     g2.setColor(
                             new Color(
@@ -630,7 +663,8 @@ public class GameView extends JFrame {
         }
     }
 
-    private void drawGameOver(Graphics2D g2) {
+    private void drawGameOver(Graphics2D g2)
+    {
 
         g2.setColor(
                 new Color(0, 0, 0, 180)

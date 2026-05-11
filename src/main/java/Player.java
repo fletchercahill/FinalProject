@@ -1,4 +1,5 @@
-public class Player {
+public class Player
+{
 
     private int health = 100;
     private int positionX;
@@ -16,77 +17,98 @@ public class Player {
 
     private boolean hasPowerUp = false;
 
-    private static final int MAX_BLAST_TIME = 40;
+    private static final int maxBlastTime = 40;
 
     private String currentAction = "idle";
 
-    private static final int MOVE_SPEED = 10;
+    private static final int moveSpeed = 10;
 
     private double velocityX = 0;
     private double velocityY = 0;
 
-    private static final double GRAVITY = 1.0;
-    private static final double JUMP_STRENGTH = -15;
-    private static final int GROUND_LEVEL = 500;
+    private static final double gravity = 1.0;
+    private static final double jumpStrength = -15;
+    private static final int groundLevel = 500;
 
-    public Player(int x, int y) {
+    public Player(int x, int y)
+    {
         positionX = x;
         positionY = y;
     }
 
-    public boolean hasBlastHit() {
+    public boolean hasBlastHit()
+    {
         return blastHit;
     }
 
-    public void setBlastHit(boolean value) {
+    public void setBlastHit(boolean value)
+    {
         blastHit = value;
     }
 
-    public void moveLeft() {
-        if (positionX >= 0) {
-            positionX -= MOVE_SPEED;
+    public void moveLeft()
+    {
+        if (positionX >= 0)
+        {
+            positionX -= moveSpeed;
         }
     }
 
-    public void moveRight() {
-        if (positionX <= 1000) {
-            positionX += MOVE_SPEED;
+    public void moveRight()
+    {
+        if (positionX <= 1000)
+        {
+            positionX += moveSpeed;
         }
     }
 
-    public boolean isJumping() {
+    public boolean isJumping()
+    {
         return isJumping;
     }
 
-    public void update() {
-        velocityY += GRAVITY;
+    public void update()
+    {
+        velocityY += gravity;
         positionY += velocityY;
 
-        if (positionY >= GROUND_LEVEL) {
-            positionY = GROUND_LEVEL;
+        if (positionY >= groundLevel)
+        {
+            positionY = groundLevel;
             velocityY = 0;
             isJumping = false;
         }
 
-        if (jumpStartY - positionY >= 100) {
+        if (jumpStartY - positionY >= 100)
+        {
             velocityY = 0;
         }
 
         positionX += velocityX;
         velocityX *= 0.8;
 
-        if (Math.abs(velocityX) < 0.5) {
+        if (Math.abs(velocityX) < 0.5)
+        {
             velocityX = 0;
         }
 
-        if (positionX < 0) positionX = 0;
-        if (positionX > 1000) positionX = 1000;
+        if (positionX < 0)
+        {
+            positionX = 0;
+        }
 
-        if (blasting) {
+        if (positionX > 1000)
+        {
+            positionX = 1000;
+        }
+
+        if (blasting)
+        {
             blastTimer--;
             blastRadius += 20;
 
-            if (blastTimer <= 0) {
+            if (blastTimer <= 0)
+            {
                 blasting = false;
                 blastRadius = 0;
                 currentAction = "idle";
@@ -94,65 +116,82 @@ public class Player {
             }
         }
 
-        if (actionTimer > 0) {
+        if (actionTimer > 0)
+        {
             actionTimer--;
-            if (actionTimer == 0) {
+
+            if (actionTimer == 0)
+            {
                 currentAction = "idle";
             }
         }
     }
 
-    public void jump() {
-        if (!isJumping) {
-            velocityY = JUMP_STRENGTH;
+    public void jump()
+    {
+        if (!isJumping)
+        {
+            velocityY = jumpStrength;
             isJumping = true;
             currentAction = "jump";
             jumpStartY = positionY;
         }
     }
 
-    public void kick() {
+    public void kick()
+    {
         currentAction = "kick";
         actionTimer = 25;
     }
 
-    public void givePowerUp() {
+    public void givePowerUp()
+    {
         hasPowerUp = true;
     }
 
-    public boolean hasPowerUp() {
+    public boolean hasPowerUp()
+    {
         return hasPowerUp;
     }
 
-    public void punch() {
+    public void punch()
+    {
         currentAction = "punch";
         actionTimer = 25;
     }
 
-    public void dodge() {
+    public void dodge()
+    {
         currentAction = "dodge";
         actionTimer = 25;
     }
 
-    public void resetAction() {
+    public void resetAction()
+    {
         currentAction = "idle";
     }
 
-    public String getCurrentAction() {
+    public String getCurrentAction()
+    {
         return currentAction;
     }
 
-    public void takeDamage(int damage) {
+    public void takeDamage(int damage)
+    {
         health -= damage;
-        if (health < 0) {
+
+        if (health < 0)
+        {
             health = 0;
         }
     }
 
-    public void blast() {
-        if (hasPowerUp && !blasting) {
+    public void blast()
+    {
+        if (hasPowerUp && !blasting)
+        {
             blasting = true;
-            blastTimer = MAX_BLAST_TIME;
+            blastTimer = maxBlastTime;
             blastRadius = 0;
             currentAction = "blast";
             blastHit = false;
@@ -161,33 +200,52 @@ public class Player {
         }
     }
 
-    public boolean isFacingRight() {
+    public boolean isFacingRight()
+    {
         return facingRight;
     }
 
-    public void setFacingRight(boolean facingRight) {
+    public void setFacingRight(boolean facingRight)
+    {
         this.facingRight = facingRight;
     }
 
-    public boolean isBlasting() {
+    public boolean isBlasting()
+    {
         return blasting;
     }
 
-    public int getBlastRadius() {
+    public int getBlastRadius()
+    {
         return blastRadius;
     }
 
-    public void applyKnockback(double force, boolean attackerFacingRight) {
-        if (attackerFacingRight) {
+    public void applyKnockback(double force, boolean attackerFacingRight)
+    {
+        if (attackerFacingRight)
+        {
             velocityX = force;
-        } else {
+        }
+        else
+        {
             velocityX = -force;
         }
 
         velocityY = -6;
     }
 
-    public int getX() { return positionX; }
-    public int getY() { return positionY; }
-    public int getHealth() { return health; }
+    public int getX()
+    {
+        return positionX;
+    }
+
+    public int getY()
+    {
+        return positionY;
+    }
+
+    public int getHealth()
+    {
+        return health;
+    }
 }
