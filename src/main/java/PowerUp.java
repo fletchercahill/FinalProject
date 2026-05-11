@@ -1,10 +1,11 @@
 public class PowerUp
 {
-
     private int x;
     private int y;
+
     private int dx = 4;
     private int dy = 3;
+
     private int size = 60;
 
     public PowerUp(int x, int y)
@@ -18,14 +19,15 @@ public class PowerUp
         x += dx;
         y += dy;
 
+        // Bounce off left/right walls
         if (x <= 0 || x >= 1200 - size)
         {
             dx *= -1;
         }
 
-        if (y <= 0 || y >= 800 - size)
+        // Bounce off top/bottom walls
+        if (y <= 0 || y >= 500 - size)
         {
-        if (y <= 0 || y >= 500 - size) {
             dy *= -1;
         }
     }
