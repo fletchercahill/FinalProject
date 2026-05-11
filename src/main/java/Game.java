@@ -127,19 +127,19 @@ public class Game implements KeyListener, ActionListener, MouseListener {
         if (!keysPressed.contains(key)) {
 
             // Player 1 actions
-            if (key == KeyEvent.VK_F && p1ActionCounter == 0) {
+            if (key == KeyEvent.VK_4 && p1ActionCounter == 0) {
                 p1.punch();
                 p1ActionCounter = 30;
                 p1AttackHit = false;
             }
 
-            if (key == KeyEvent.VK_G && p1ActionCounter == 0) {
+            if (key == KeyEvent.VK_5 && p1ActionCounter == 0) {
                 p1.kick();
                 p1ActionCounter = 30;
                 p1AttackHit = false;
             }
 
-            if (key == KeyEvent.VK_E && p1ActionCounter == 0) {
+            if (key == KeyEvent.VK_6 && p1ActionCounter == 0) {
                 p1.blast();
                 p1ActionCounter = 30;
                 p1AttackHit = false;
@@ -151,19 +151,19 @@ public class Game implements KeyListener, ActionListener, MouseListener {
             }
 
             // Player 2 actions
-            if (key == KeyEvent.VK_SHIFT && p2ActionCounter == 0) {
+            if (key == KeyEvent.VK_P && p2ActionCounter == 0) {
                 p2.punch();
                 p2ActionCounter = 30;
                 p2AttackHit = false;
             }
 
-            if (key == KeyEvent.VK_ENTER && p2ActionCounter == 0) {
+            if (key == KeyEvent.VK_OPEN_BRACKET && p2ActionCounter == 0) {
                 p2.kick();
                 p2ActionCounter = 30;
                 p2AttackHit = false;
             }
 
-            if (key == KeyEvent.VK_SLASH && p2ActionCounter == 0) {
+            if (key == KeyEvent.VK_CLOSE_BRACKET && p2ActionCounter == 0) {
                 p2.blast();
                 p2ActionCounter = 30;
                 p2AttackHit = false;
@@ -173,7 +173,7 @@ public class Game implements KeyListener, ActionListener, MouseListener {
                 p2.dodge();
                 p2ActionCounter = 30;
             }
-            if (key == KeyEvent.VK_1) {
+            if (key == KeyEvent.VK_7) {
 
                 if (getDistance() >= 500) {
 
