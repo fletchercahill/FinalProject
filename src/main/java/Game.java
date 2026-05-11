@@ -338,7 +338,7 @@ public class Game implements KeyListener, ActionListener, MouseListener {
 
                 if (canBeHit(p1)) {
 
-                    p1.takeDamage(6);
+                    p1.takeDamage(3);
 
                     p1.applyKnockback(
                             18,
@@ -356,7 +356,7 @@ public class Game implements KeyListener, ActionListener, MouseListener {
 
                 if (canBeHit(p2)) {
 
-                    p2.takeDamage(6);
+                    p2.takeDamage(3);
 
                     p2.applyKnockback(
                             18,
