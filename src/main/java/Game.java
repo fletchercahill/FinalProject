@@ -1,6 +1,8 @@
 import javax.swing.*;
 import java.awt.event.*;
 import java.util.HashSet;
+import java.util.ArrayList;
+import java.awt.Rectangle;
 
 public class Game implements KeyListener, ActionListener, MouseListener {
 
@@ -19,7 +21,7 @@ public class Game implements KeyListener, ActionListener, MouseListener {
     public boolean gameOver = false;
 
     private static final int SLEEP_TIME = 16;
-
+    private ArrayList<Fireball> fireballs = new ArrayList<>();
     private int p1ActionCounter = 0;
     private int p2ActionCounter = 0;
 
@@ -40,6 +42,9 @@ public class Game implements KeyListener, ActionListener, MouseListener {
 
     private static final int PUNCH_DAMAGE = 6;
     private static final int KICK_DAMAGE = 5;
+    private static final int FIREBALL_DAMAGE = 2;
+    private static final int BLAST_DAMAGE = 20;
+
 
     private HashSet<Integer> keysPressed = new HashSet<>();
 
@@ -122,19 +127,19 @@ public class Game implements KeyListener, ActionListener, MouseListener {
         if (!keysPressed.contains(key)) {
 
             // Player 1 actions
-            if (key == KeyEvent.VK_F && p1ActionCounter == 0) {
+            if (key == KeyEvent.VK_4 && p1ActionCounter == 0) {
                 p1.punch();
                 p1ActionCounter = 30;
                 p1AttackHit = false;
             }
 
-            if (key == KeyEvent.VK_G && p1ActionCounter == 0) {
+            if (key == KeyEvent.VK_5 && p1ActionCounter == 0) {
                 p1.kick();
                 p1ActionCounter = 30;
                 p1AttackHit = false;
             }
 
-            if (key == KeyEvent.VK_E && p1ActionCounter == 0) {
+            if (key == KeyEvent.VK_6 && p1ActionCounter == 0) {
                 p1.blast();
                 p1ActionCounter = 30;
                 p1AttackHit = false;
@@ -146,19 +151,19 @@ public class Game implements KeyListener, ActionListener, MouseListener {
             }
 
             // Player 2 actions
-            if (key == KeyEvent.VK_SHIFT && p2ActionCounter == 0) {
+            if (key == KeyEvent.VK_P && p2ActionCounter == 0) {
                 p2.punch();
                 p2ActionCounter = 30;
                 p2AttackHit = false;
             }
 
-            if (key == KeyEvent.VK_ENTER && p2ActionCounter == 0) {
+            if (key == KeyEvent.VK_OPEN_BRACKET && p2ActionCounter == 0) {
                 p2.kick();
                 p2ActionCounter = 30;
                 p2AttackHit = false;
             }
 
-            if (key == KeyEvent.VK_SLASH && p2ActionCounter == 0) {
+            if (key == KeyEvent.VK_CLOSE_BRACKET && p2ActionCounter == 0) {
                 p2.blast();
                 p2ActionCounter = 30;
                 p2AttackHit = false;
@@ -167,6 +172,54 @@ public class Game implements KeyListener, ActionListener, MouseListener {
             if (key == KeyEvent.VK_DOWN && p2ActionCounter == 0) {
                 p2.dodge();
                 p2ActionCounter = 30;
+            }
+            if (key == KeyEvent.VK_7) {
+
+                if (getDistance() >= 500) {
+
+                    p1.fireball();
+
+                    int x;
+
+                    if (p1.isFacingRight()) {
+                        x = p1.getX() + 180;
+                    } else {
+                        x = p1.getX() - 20;
+                    }
+
+                    fireballs.add(
+                            new Fireball(
+                                    x,
+                                    p1.getY() + 110,
+                                    p1.isFacingRight(),
+                                    p1
+                            )
+                    );
+                }
+            }
+            if (key == KeyEvent.VK_BACK_SLASH) {
+
+                if (getDistance() >= 500) {
+
+                    p2.fireball();
+
+                    int x;
+
+                    if (p2.isFacingRight()) {
+                        x = p2.getX() + 180;
+                    } else {
+                        x = p2.getX() - 20;
+                    }
+
+                    fireballs.add(
+                            new Fireball(
+                                    x,
+                                    p2.getY() + 110,
+                                    p2.isFacingRight(),
+                                    p2
+                            )
+                    );
+                }
             }
         }
 
@@ -220,6 +273,8 @@ public class Game implements KeyListener, ActionListener, MouseListener {
 
         p1.update();
         p2.update();
+        updateFireballs();
+
 
         updatePowerUp();
 
@@ -251,6 +306,75 @@ public class Game implements KeyListener, ActionListener, MouseListener {
         }
 
         window.repaint();
+    }
+    public ArrayList<Fireball> getFireballs() {
+        return fireballs;
+    }
+    private void updateFireballs() {
+
+        for (int i = 0; i < fireballs.size(); i++) {
+
+            Fireball f = fireballs.get(i);
+
+            f.update();
+
+            Rectangle hitbox = f.getBounds();
+
+            Rectangle p1Box = new Rectangle(
+                    p1.getX(),
+                    p1.getY(),
+                    230,
+                    250
+            );
+
+            Rectangle p2Box = new Rectangle(
+                    p2.getX(),
+                    p2.getY(),
+                    230,
+                    250
+            );
+
+            // HIT PLAYER 1
+
+            if (f.getOwner() != p1 &&
+                    hitbox.intersects(p1Box)) {
+
+                if (canBeHit(p1)) {
+
+                    p1.takeDamage(FIREBALL_DAMAGE);
+
+                    p1.applyKnockback(
+                            18,
+                            f.getOwner().isFacingRight()
+                    );
+
+                    f.deactivate();
+                }
+            }
+
+            // HIT PLAYER 2
+
+            if (f.getOwner() != p2 &&
+                    hitbox.intersects(p2Box)) {
+
+                if (canBeHit(p2)) {
+
+                    p2.takeDamage(FIREBALL_DAMAGE);
+
+                    p2.applyKnockback(
+                            18,
+                            f.getOwner().isFacingRight()
+                    );
+
+                    f.deactivate();
+                }
+            }
+        }
+
+        fireballs.removeIf(f -> !f.isActive());
+    }
+    private int getDistance() {
+        return Math.abs(p1.getX() - p2.getX());
     }
 
     private void updatePowerUp() {
@@ -392,7 +516,7 @@ public class Game implements KeyListener, ActionListener, MouseListener {
         if (p1.isBlasting() && !p1.hasBlastHit() && isInFront(p1, p2)) {
             if (distance <= p1.getBlastRadius()) {
                 if (canBeHit(p2)) {
-                    p2.takeDamage(20);
+                    p2.takeDamage(BLAST_DAMAGE);
                     p2.applyKnockback(20, p1.isFacingRight());
                 }
 
@@ -403,7 +527,7 @@ public class Game implements KeyListener, ActionListener, MouseListener {
         if (p2.isBlasting() && !p2.hasBlastHit() && isInFront(p2, p1)) {
             if (distance <= p2.getBlastRadius()) {
                 if (canBeHit(p1)) {
-                    p1.takeDamage(20);
+                    p1.takeDamage(BLAST_DAMAGE);
                     p1.applyKnockback(20, p2.isFacingRight());
                 }
 

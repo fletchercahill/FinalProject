@@ -137,6 +137,10 @@ public class Player {
     public void resetAction() {
         currentAction = "idle";
     }
+    public void fireball() {
+        currentAction = "fireball";
+        actionTimer = 20;
+    }
 
     public String getCurrentAction() {
         return currentAction;
