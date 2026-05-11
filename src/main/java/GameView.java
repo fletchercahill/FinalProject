@@ -96,7 +96,10 @@ public class GameView extends JFrame
 
         BufferStrategy bf = this.getBufferStrategy();
 
-        if (bf == null) return;
+        if (bf == null)
+        {
+            return;
+        }
 
         Graphics2D g2 =
                 (Graphics2D) bf.getDrawGraphics();
@@ -251,16 +254,44 @@ public class GameView extends JFrame
         int instructionsX = (WINDOW_WIDTH - buttonWidth) / 2;
         int instructionsY = 610;
 
-        g2.setColor(Color.WHITE);
-        g2.fillRect(instructionsX, instructionsY,
-                buttonWidth, buttonHeight);
+        // Shadow
+        g2.setColor(new Color(80, 20, 10));
+        g2.fillRoundRect(
+                instructionsX + 6,
+                instructionsY + 6,
+                buttonWidth,
+                buttonHeight,
+                25,
+                25
+        );
 
-        g2.setColor(Color.BLACK);
-        g2.drawRect(instructionsX, instructionsY,
-                buttonWidth, buttonHeight);
+        // Main button
+        g2.setColor(new Color(40, 40, 40));
+        g2.fillRoundRect(
+                instructionsX,
+                instructionsY,
+                buttonWidth,
+                buttonHeight,
+                25,
+                25
+        );
+
+        // Border
+        g2.setColor(new Color(255, 80, 20));
+        g2.setStroke(new BasicStroke(4));
+        g2.drawRoundRect(
+                instructionsX,
+                instructionsY,
+                buttonWidth,
+                buttonHeight,
+                25,
+                25
+        );
+
+        g2.setStroke(new BasicStroke(1));
 
         Font instructionsFont =
-                new Font("Arial", Font.BOLD, 26);
+                new Font("Arial", Font.BOLD, 25);
 
         g2.setFont(instructionsFont);
 
@@ -279,6 +310,8 @@ public class GameView extends JFrame
                         ((buttonHeight -
                                 instructionsFM.getHeight()) / 2)
                         + instructionsFM.getAscent();
+
+        g2.setColor(Color.WHITE);
 
         g2.drawString(
                 instructionsText,
@@ -410,16 +443,22 @@ public class GameView extends JFrame
                 backend.p1.getCurrentAction();
 
         if ("punch".equals(a1))
+        {
             img1 = ryuPunchImage;
-
+        }
         else if ("kick".equals(a1))
+        {
             img1 = ryuKickImage;
-
+        }
         else if ("dodge".equals(a1))
+        {
             img1 = ryuDodgeImage;
+        }
 
         int x1 = backend.p1.getX();
         int y1 = backend.p1.getY();
+
+        drawPlayerGlow(g2, backend.p1);
 
         if (backend.p1.isFacingRight())
         {
@@ -453,16 +492,22 @@ public class GameView extends JFrame
                 backend.p2.getCurrentAction();
 
         if ("punch".equals(a2))
+        {
             img2 = kenPunchImage;
-
+        }
         else if ("kick".equals(a2))
+        {
             img2 = kenKickImage;
-
+        }
         else if ("dodge".equals(a2))
+        {
             img2 = kenDodgeImage;
+        }
 
         int x2 = backend.p2.getX();
         int y2 = backend.p2.getY();
+
+        drawPlayerGlow(g2, backend.p2);
 
         if (backend.p2.isFacingRight())
         {
@@ -491,6 +536,50 @@ public class GameView extends JFrame
         }
     }
 
+    private void drawPlayerGlow(Graphics2D g2, Player player)
+    {
+
+        if (!player.hasPowerUp())
+        {
+            return;
+        }
+
+        int x = player.getX();
+        int y = player.getY();
+        int width = 230;
+        int height = 250;
+
+        double pulse =
+                1.0 + 0.08 * Math.sin(System.currentTimeMillis() / 120.0);
+
+        int outerWidth = (int)(width * 1.45 * pulse);
+        int outerHeight = (int)(height * 1.35 * pulse);
+
+        int middleWidth = (int)(width * 1.28 * pulse);
+        int middleHeight = (int)(height * 1.20 * pulse);
+
+        int innerWidth = (int)(width * 1.12 * pulse);
+        int innerHeight = (int)(height * 1.08 * pulse);
+
+        int outerX = x - (outerWidth - width) / 2;
+        int outerY = y - (outerHeight - height) / 2;
+
+        int middleX = x - (middleWidth - width) / 2;
+        int middleY = y - (middleHeight - height) / 2;
+
+        int innerX = x - (innerWidth - width) / 2;
+        int innerY = y - (innerHeight - height) / 2;
+
+        g2.setColor(new Color(255, 0, 0, 45));
+        g2.fillOval(outerX, outerY, outerWidth, outerHeight);
+
+        g2.setColor(new Color(255, 50, 50, 75));
+        g2.fillOval(middleX, middleY, middleWidth, middleHeight);
+
+        g2.setColor(new Color(255, 120, 120, 110));
+        g2.fillOval(innerX, innerY, innerWidth, innerHeight);
+    }
+
     private void drawBlast(Graphics2D g2)
     {
 
@@ -502,7 +591,8 @@ public class GameView extends JFrame
 
             blastingPlayer = backend.p1;
 
-        } else if (backend.p2 != null &&
+        }
+        else if (backend.p2 != null &&
                 backend.p2.isBlasting())
         {
 
