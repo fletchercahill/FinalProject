@@ -42,6 +42,9 @@ public class Game implements KeyListener, ActionListener, MouseListener {
 
     private static final int PUNCH_DAMAGE = 6;
     private static final int KICK_DAMAGE = 5;
+    private static final int FIREBALL_DAMAGE = 2;
+    private static final int BLAST_DAMAGE = 20;
+
 
     private HashSet<Integer> keysPressed = new HashSet<>();
 
@@ -338,7 +341,7 @@ public class Game implements KeyListener, ActionListener, MouseListener {
 
                 if (canBeHit(p1)) {
 
-                    p1.takeDamage(3);
+                    p1.takeDamage(FIREBALL_DAMAGE);
 
                     p1.applyKnockback(
                             18,
@@ -356,7 +359,7 @@ public class Game implements KeyListener, ActionListener, MouseListener {
 
                 if (canBeHit(p2)) {
 
-                    p2.takeDamage(3);
+                    p2.takeDamage(FIREBALL_DAMAGE);
 
                     p2.applyKnockback(
                             18,
@@ -513,7 +516,7 @@ public class Game implements KeyListener, ActionListener, MouseListener {
         if (p1.isBlasting() && !p1.hasBlastHit() && isInFront(p1, p2)) {
             if (distance <= p1.getBlastRadius()) {
                 if (canBeHit(p2)) {
-                    p2.takeDamage(20);
+                    p2.takeDamage(BLAST_DAMAGE);
                     p2.applyKnockback(20, p1.isFacingRight());
                 }
 
@@ -524,7 +527,7 @@ public class Game implements KeyListener, ActionListener, MouseListener {
         if (p2.isBlasting() && !p2.hasBlastHit() && isInFront(p2, p1)) {
             if (distance <= p2.getBlastRadius()) {
                 if (canBeHit(p1)) {
-                    p1.takeDamage(20);
+                    p1.takeDamage(BLAST_DAMAGE);
                     p1.applyKnockback(20, p2.isFacingRight());
                 }
 
