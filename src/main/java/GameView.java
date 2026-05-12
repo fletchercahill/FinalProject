@@ -4,27 +4,17 @@ import java.awt.image.BufferStrategy;
 
 public class GameView extends JFrame
 {
-    // =====================================================
     // WINDOW SETTINGS
-    // =====================================================
     private static final int WINDOW_WIDTH = 1200;
     private static final int WINDOW_HEIGHT = 800;
-    // =====================================================
     // FIREBALL IMAGES
-    // =====================================================
     private final Image redBallImage;
     private final Image blueBallImage;
-    // =====================================================
     // GAME REFERENCE
-    // =====================================================
     private Game backend;
-    // =====================================================
     // BACKGROUND
-    // =====================================================
     private final Image bgImage;
-    // =====================================================
     // PLAYER SPRITES
-    // =====================================================
     private final Image ryuIdleImage;
     private final Image ryuPunchImage;
     private final Image ryuKickImage;
@@ -34,20 +24,14 @@ public class GameView extends JFrame
     private final Image kenPunchImage;
     private final Image kenKickImage;
     private final Image kenDodgeImage;
-    // =====================================================
     // HEALTH BAR ICONS
-    // =====================================================
     private final Image ryuIcon;
     private final Image kenIcon;
-    // =====================================================
     // UI IMAGES
-    // =====================================================
     private final Image controlsImage;
     private final Image powerUpImage;
     private final Image logoImage;
-    // =====================================================
     // HEALTH BARS
-    // =====================================================
     private HealthBar p1HealthBar;
     private HealthBar p2HealthBar;
 
@@ -110,7 +94,7 @@ public class GameView extends JFrame
         this.setTitle("Final Project");
         this.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         this.setVisible(true);
-
+        // Establishes the double buffer strat4egy
         createBufferStrategy(2);
     }
 
