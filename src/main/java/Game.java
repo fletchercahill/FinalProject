@@ -6,6 +6,7 @@ import java.awt.Rectangle;
 
 public class Game implements KeyListener, ActionListener, MouseListener
 {
+    // State variable
     public static final int stateWelcome = 0;
     public static final int stateFight = 1;
     public static final int stateEnd = 2;
@@ -30,15 +31,15 @@ public class Game implements KeyListener, ActionListener, MouseListener
 
     private boolean p1AttackHit = false;
     private boolean p2AttackHit = false;
-
+    // Range constants
     private static final int punchRange = 160;
     private static final int kickRange = 190;
-
+    // Damage constants
     private static final int punchDamage = 6;
     private static final int kickDamage = 5;
     private static final int fireballDamage = 2;
     private static final int blastDamage = 20;
-
+    // Variables to handle attack checking
     private static final int defaultCounter = 30;
     private static final int centerOffset = 115;
     private static final int effectDuration = 12;
@@ -73,25 +74,21 @@ public class Game implements KeyListener, ActionListener, MouseListener
         window.addMouseListener(this);
         window.repaint();
     }
-    // =====================================================
-// RANDOM POWER-UP SPAWN TIME
-// =====================================================
+    // Returns a random spawn time for the power up
     private int getRandomSpawnTime()
     {
         int min = 5 * timeConversionFactor;
         int max = 10 * timeConversionFactor;
         return min + (int)(Math.random() * (max - min));
     }
-    // =====================================================
-// RANDOM POWER-UP COOLDOWN
-// =====================================================
+    // Returns the cooldown time for the power up
     private int getCooldownTime()
     {
         int min = 5 * timeConversionFactor;
         int max = 10 * timeConversionFactor;
         return min + (int)(Math.random() * (max - min));
     }
-
+    // Gives a power up warning when the power up is about to drop
     public boolean shouldShowPowerUpWarning()
     {
         return gameState == stateFight &&
@@ -110,9 +107,7 @@ public class Game implements KeyListener, ActionListener, MouseListener
     {
         return gameState;
     }
-    /// =====================================================
-// MOUSE INPUT
-// =====================================================
+    // Mouse input
 
     @Override
     public void mouseClicked(MouseEvent e)
@@ -641,7 +636,7 @@ public class Game implements KeyListener, ActionListener, MouseListener
             }
         }
     }
-
+    // Main game loop
     public static void main(String[] args)
     {
         Game g1 = new Game();
