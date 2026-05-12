@@ -73,14 +73,18 @@ public class Game implements KeyListener, ActionListener, MouseListener
         window.addMouseListener(this);
         window.repaint();
     }
-
+    // =====================================================
+// RANDOM POWER-UP SPAWN TIME
+// =====================================================
     private int getRandomSpawnTime()
     {
         int min = 5 * timeConversionFactor;
         int max = 10 * timeConversionFactor;
         return min + (int)(Math.random() * (max - min));
     }
-
+    // =====================================================
+// RANDOM POWER-UP COOLDOWN
+// =====================================================
     private int getCooldownTime()
     {
         int min = 5 * timeConversionFactor;
@@ -106,6 +110,9 @@ public class Game implements KeyListener, ActionListener, MouseListener
     {
         return gameState;
     }
+    /// =====================================================
+// MOUSE INPUT
+// =====================================================
 
     @Override
     public void mouseClicked(MouseEvent e)
@@ -113,29 +120,86 @@ public class Game implements KeyListener, ActionListener, MouseListener
         int x = e.getX();
         int y = e.getY();
 
-        if (gameState == stateInstructions)
+        // =====================================================
+        // PLAY AGAIN BUTTON
+        // =====================================================
+
+        if (gameState == stateEnd)
         {
-            if (y >= 600)
+            if (x >= 460 && x <= 740 &&
+                    y >= 470 && y <= 550)
             {
-                gameState = stateWelcome;
+                // Reset players
+                p1 = new Player(100, 500);
+                p2 = new Player(900, 500);
+
+                // Clear fireballs
+                fireballs.clear();
+
+                // Reset power-up
+                powerUp = null;
+
+                // Reset game state
+                gameOver = false;
+
+                winner = "";
+
+                gameState = stateFight;
+
                 window.repaint();
+
                 return;
             }
         }
 
+        // =====================================================
+        // INSTRUCTIONS SCREEN
+        // =====================================================
+
+        if (gameState == stateInstructions)
+        {
+            // BACK BUTTON AREA
+            if (y >= 600)
+            {
+                gameState = stateWelcome;
+
+                window.repaint();
+
+                return;
+            }
+        }
+
+        // =====================================================
+        // WELCOME SCREEN
+        // =====================================================
+
         if (gameState == stateWelcome)
         {
-            if (x >= 475 && x <= 725 && y >= 500 && y <= 560)
+            // =====================================================
+            // FIGHT BUTTON
+            // =====================================================
+
+            if (x >= 450 && x <= 750 &&
+                    y >= 455 && y <= 705)
             {
                 gameState = stateFight;
+
                 window.repaint();
+
                 return;
             }
 
-            if (x >= 475 && x <= 725 && y >= 610 && y <= 670)
+            // =====================================================
+            // INSTRUCTIONS BUTTON
+            // =====================================================
+
+            if (x >= 475 && x <= 725 &&
+                    y >= 730 && y <= 790)
             {
                 gameState = stateInstructions;
+
                 window.repaint();
+
                 return;
             }
         }
@@ -417,7 +481,9 @@ public class Game implements KeyListener, ActionListener, MouseListener
         if (powerUp != null)
         {
             powerUp.update();
-
+            // =====================================================
+            // POWER-UP PICKUP
+            // =====================================================
             if (powerUp.collides(p1))
             {
                 p1.givePowerUp();

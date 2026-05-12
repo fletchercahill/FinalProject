@@ -148,7 +148,9 @@ public class Player
     {
         hasPowerUp = true;
     }
-
+    // =====================================================
+// POWER-UP STATUS
+// =====================================================
     public boolean hasPowerUp()
     {
         return hasPowerUp;
@@ -189,7 +191,9 @@ public class Player
             health = 0;
         }
     }
-
+    // =====================================================
+// BLAST ATTACK
+// =====================================================
     public void blast()
     {
         if (hasPowerUp && !blasting)

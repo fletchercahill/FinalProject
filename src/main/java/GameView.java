@@ -4,16 +4,27 @@ import java.awt.image.BufferStrategy;
 
 public class GameView extends JFrame
 {
+    // =====================================================
+    // WINDOW SETTINGS
+    // =====================================================
     private static final int WINDOW_WIDTH = 1200;
     private static final int WINDOW_HEIGHT = 800;
-
+    // =====================================================
+    // FIREBALL IMAGES
+    // =====================================================
     private final Image redBallImage;
     private final Image blueBallImage;
-
+    // =====================================================
+    // GAME REFERENCE
+    // =====================================================
     private Game backend;
-
+    // =====================================================
+    // BACKGROUND
+    // =====================================================
     private final Image bgImage;
-
+    // =====================================================
+    // PLAYER SPRITES
+    // =====================================================
     private final Image ryuIdleImage;
     private final Image ryuPunchImage;
     private final Image ryuKickImage;
@@ -23,14 +34,20 @@ public class GameView extends JFrame
     private final Image kenPunchImage;
     private final Image kenKickImage;
     private final Image kenDodgeImage;
-
+    // =====================================================
+    // HEALTH BAR ICONS
+    // =====================================================
     private final Image ryuIcon;
     private final Image kenIcon;
-
+    // =====================================================
+    // UI IMAGES
+    // =====================================================
     private final Image controlsImage;
     private final Image powerUpImage;
     private final Image logoImage;
-
+    // =====================================================
+    // HEALTH BARS
+    // =====================================================
     private HealthBar p1HealthBar;
     private HealthBar p2HealthBar;
 
@@ -181,9 +198,16 @@ public class GameView extends JFrame
             bf.show();
         }
     }
+// =====================================================
+// WELCOME SCREEN
+// =====================================================
 
     private void drawWelcomeScreen(Graphics2D g2)
     {
+        // =====================================================
+        // BACKGROUND
+        // =====================================================
+
         g2.setColor(new Color(240, 220, 180));
 
         g2.fillRect(
@@ -193,85 +217,223 @@ public class GameView extends JFrame
                 WINDOW_HEIGHT
         );
 
+        // =====================================================
+        // TITLE
+        // =====================================================
+
         g2.setColor(Color.BLACK);
 
         g2.setFont(
                 new Font("Arial", Font.BOLD, 60)
         );
 
+        String title = "BRAWL 360";
+
+        FontMetrics titleMetrics =
+                g2.getFontMetrics();
+
+        int titleX =
+                (WINDOW_WIDTH -
+                        titleMetrics.stringWidth(title)) / 2;
+
         g2.drawString(
-                "BRAWL 360",
-                420,
-                100
+                title,
+                titleX,
+                90
         );
+
+        // =====================================================
+        // LOGO IMAGE
+        // =====================================================
+
+        int logoWidth = 420;
+        int logoHeight = 420;
+
+        int logoX =
+                (WINDOW_WIDTH - logoWidth) / 2;
+
+        int logoY = 70;
 
         g2.drawImage(
                 logoImage,
-                390,
-                90,
-                420,
-                420,
+                logoX,
+                logoY,
+                logoWidth,
+                logoHeight,
                 this
         );
 
-        // FIGHT BUTTON
+        // =====================================================
+        // FIGHT BUTTON - PULSATING COMIC STYLE
+        // =====================================================
 
-        g2.setColor(Color.WHITE);
+        int fightCenterX = WINDOW_WIDTH / 2;
+        int fightCenterY = 575;
 
-        g2.fillRect(
-                475,
-                500,
-                250,
-                60
+        int spikes = 18;
+
+        int outerRadius = 150;
+        int innerRadius = 105;
+
+        // Pulsating animation
+        double pulse =
+                1.0 + 0.08 *
+                        Math.sin(System.currentTimeMillis() / 180.0);
+
+        int pulseOuterRadius =
+                (int)(outerRadius * pulse);
+
+        int pulseInnerRadius =
+                (int)(innerRadius * pulse);
+
+        Polygon burst = new Polygon();
+
+        for (int i = 0; i < spikes * 2; i++)
+        {
+            double angle =
+                    Math.PI * i / spikes;
+
+            int radius;
+
+            if (i % 2 == 0)
+            {
+                radius = pulseOuterRadius;
+            }
+            else
+            {
+                radius = pulseInnerRadius;
+            }
+
+            int px =
+                    (int)(fightCenterX +
+                            Math.cos(angle) * radius);
+
+            int py =
+                    (int)(fightCenterY +
+                            Math.sin(angle) * radius);
+
+            burst.addPoint(px, py);
+        }
+
+        // Main burst
+        g2.setColor(
+                new Color(255, 220, 0)
         );
 
+        g2.fillPolygon(burst);
+
+        // Outline
         g2.setColor(Color.BLACK);
 
-        g2.drawRect(
-                475,
-                500,
-                250,
-                60
+        g2.setStroke(
+                new BasicStroke(6)
         );
 
+        g2.drawPolygon(burst);
+
+        // Comic text
         g2.setFont(
-                new Font("Arial", Font.BOLD, 35)
+                new Font("Impact", Font.BOLD, 80)
+        );
+
+        String fightText = "FIGHT!";
+
+        FontMetrics fightMetrics =
+                g2.getFontMetrics();
+
+        int fightTextX =
+                fightCenterX -
+                        fightMetrics.stringWidth(fightText) / 2;
+
+        int fightTextY =
+                fightCenterY +
+                        fightMetrics.getAscent() / 3;
+
+        // Shadow
+        g2.setColor(Color.BLACK);
+
+        g2.drawString(
+                fightText,
+                fightTextX + 6,
+                fightTextY + 6
+        );
+
+        // Main text
+        g2.setColor(
+                new Color(255, 50, 50)
         );
 
         g2.drawString(
-                "FIGHT!",
-                540,
-                542
+                fightText,
+                fightTextX,
+                fightTextY
         );
 
+        // =====================================================
         // INSTRUCTIONS BUTTON
+        // =====================================================
+
+        int instructionsWidth = 250;
+        int instructionsHeight = 60;
+
+        int instructionsX =
+                (WINDOW_WIDTH - instructionsWidth) / 2;
+
+        int instructionsY = 730;
+
+        g2.setColor(
+                new Color(0, 0, 0, 190)
+        );
+
+        g2.fillRoundRect(
+                instructionsX,
+                instructionsY,
+                instructionsWidth,
+                instructionsHeight,
+                25,
+                25
+        );
 
         g2.setColor(Color.WHITE);
 
-        g2.fillRect(
-                475,
-                610,
-                250,
-                60
+        g2.setStroke(
+                new BasicStroke(4)
         );
 
-        g2.setColor(Color.BLACK);
-
-        g2.drawRect(
-                475,
-                610,
-                250,
-                60
+        g2.drawRoundRect(
+                instructionsX,
+                instructionsY,
+                instructionsWidth,
+                instructionsHeight,
+                25,
+                25
         );
 
         g2.setFont(
                 new Font("Arial", Font.BOLD, 28)
         );
 
+        String instructionsText =
+                "INSTRUCTIONS";
+
+        FontMetrics instructionsMetrics =
+                g2.getFontMetrics();
+
+        int instructionsTextX =
+                instructionsX +
+                        (instructionsWidth -
+                                instructionsMetrics.stringWidth(instructionsText)) / 2;
+
+        int instructionsTextY =
+                instructionsY +
+                        ((instructionsHeight -
+                                instructionsMetrics.getHeight()) / 2)
+                        + instructionsMetrics.getAscent();
+
         g2.drawString(
-                "INSTRUCTIONS",
-                495,
-                648
+                instructionsText,
+                instructionsTextX,
+                instructionsTextY
         );
     }
 
@@ -390,11 +552,12 @@ public class GameView extends JFrame
                 barHeight
         );
     }
-
+    // =====================================================
+    // PLAYER RENDERING
+    // =====================================================
     private void drawPlayers(Graphics2D g2)
     {
         // PLAYER 1
-
         if (backend.p1 != null)
         {
             drawPlayerGlow(g2, backend.p1);
@@ -495,7 +658,9 @@ public class GameView extends JFrame
             }
         }
     }
-
+    // =====================================================
+    // POWER-UP GLOW EFFECT
+    // =====================================================
     private void drawPlayerGlow(Graphics2D g2,
                                 Player player)
     {
@@ -768,9 +933,12 @@ public class GameView extends JFrame
             );
         }
     }
-
+    // =====================================================
+    // GAME OVER SCREEN
+    // =====================================================
     private void drawGameOver(Graphics2D g2)
     {
+        // Dark overlay
         g2.setColor(
                 new Color(0, 0, 0, 180)
         );
@@ -781,6 +949,10 @@ public class GameView extends JFrame
                 WINDOW_WIDTH,
                 WINDOW_HEIGHT
         );
+
+        // =====================================================
+        // GAME OVER TEXT
+        // =====================================================
 
         g2.setColor(Color.WHITE);
 
@@ -794,6 +966,10 @@ public class GameView extends JFrame
                 300
         );
 
+        // =====================================================
+        // WINNER TEXT
+        // =====================================================
+
         g2.setFont(
                 new Font("Arial", Font.BOLD, 40)
         );
@@ -802,6 +978,72 @@ public class GameView extends JFrame
                 backend.winner,
                 420,
                 380
+        );
+
+        // =====================================================
+        // PLAY AGAIN BUTTON
+        // =====================================================
+
+        int buttonWidth = 280;
+        int buttonHeight = 80;
+
+        int buttonX =
+                (WINDOW_WIDTH - buttonWidth) / 2;
+
+        int buttonY = 470;
+
+        g2.setColor(
+                new Color(255, 220, 0)
+        );
+
+        g2.fillRoundRect(
+                buttonX,
+                buttonY,
+                buttonWidth,
+                buttonHeight,
+                30,
+                30
+        );
+
+        g2.setColor(Color.BLACK);
+
+        g2.setStroke(
+                new BasicStroke(5)
+        );
+
+        g2.drawRoundRect(
+                buttonX,
+                buttonY,
+                buttonWidth,
+                buttonHeight,
+                30,
+                30
+        );
+
+        g2.setFont(
+                new Font("Impact", Font.BOLD, 42)
+        );
+
+        String text = "PLAY AGAIN";
+
+        FontMetrics fm =
+                g2.getFontMetrics();
+
+        int textX =
+                buttonX +
+                        (buttonWidth -
+                                fm.stringWidth(text)) / 2;
+
+        int textY =
+                buttonY +
+                        ((buttonHeight -
+                                fm.getHeight()) / 2)
+                        + fm.getAscent();
+
+        g2.drawString(
+                text,
+                textX,
+                textY
         );
     }
 }
