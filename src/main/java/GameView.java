@@ -94,13 +94,14 @@ public class GameView extends JFrame
         this.setTitle("Final Project");
         this.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         this.setVisible(true);
-        // Establishes the double buffer strat4egy
+        // Establishes the double buffer strategy
         createBufferStrategy(2);
     }
 
     @Override
     public void paint(Graphics g)
     {
+        // Initializes double buffer strategy
         BufferStrategy bf = this.getBufferStrategy();
 
         if (bf == null)
@@ -113,6 +114,7 @@ public class GameView extends JFrame
 
         try
         {
+            // Draws game states
             if (backend.getGameState() == Game.stateWelcome)
             {
                 drawWelcomeScreen(g2);
@@ -127,7 +129,7 @@ public class GameView extends JFrame
 
             int shakeX = 0;
             int shakeY = 0;
-
+            // Checks for shaking effect
             if (backend.shakeTimer > 0)
             {
                 shakeX =
@@ -151,7 +153,7 @@ public class GameView extends JFrame
                     getWidth(),
                     getHeight()
             );
-
+            // Draws all screen elements
             g2.drawImage(
                     bgImage,
                     0,
@@ -160,7 +162,6 @@ public class GameView extends JFrame
                     getHeight(),
                     this
             );
-
             drawHealthBars(g2);
             drawPowerUp(g2);
             drawPowerUpWarning(g2);
@@ -182,15 +183,11 @@ public class GameView extends JFrame
             bf.show();
         }
     }
-// =====================================================
 // WELCOME SCREEN
-// =====================================================
 
     private void drawWelcomeScreen(Graphics2D g2)
     {
-        // =====================================================
-        // BACKGROUND
-        // =====================================================
+        // Background
 
         g2.setColor(new Color(240, 220, 180));
 
@@ -200,11 +197,7 @@ public class GameView extends JFrame
                 WINDOW_WIDTH,
                 WINDOW_HEIGHT
         );
-
-        // =====================================================
-        // TITLE
-        // =====================================================
-
+        // Title
         g2.setColor(Color.BLACK);
 
         g2.setFont(
@@ -226,9 +219,7 @@ public class GameView extends JFrame
                 90
         );
 
-        // =====================================================
-        // LOGO IMAGE
-        // =====================================================
+        // Logo image
 
         int logoWidth = 420;
         int logoHeight = 420;
@@ -247,9 +238,7 @@ public class GameView extends JFrame
                 this
         );
 
-        // =====================================================
-        // FIGHT BUTTON - PULSATING COMIC STYLE
-        // =====================================================
+        // Fight button
 
         int fightCenterX = WINDOW_WIDTH / 2;
         int fightCenterY = 575;
@@ -353,9 +342,7 @@ public class GameView extends JFrame
                 fightTextY
         );
 
-        // =====================================================
-        // INSTRUCTIONS BUTTON
-        // =====================================================
+        // Instructions button
 
         int instructionsWidth = 250;
         int instructionsHeight = 60;
@@ -420,7 +407,7 @@ public class GameView extends JFrame
                 instructionsTextY
         );
     }
-
+    // Draws the image of the instructions
     private void drawInstructionsScreen(Graphics2D g2)
     {
         g2.setColor(Color.BLACK);
@@ -441,7 +428,7 @@ public class GameView extends JFrame
                 this
         );
     }
-
+    // Draws each player's health bar
     private void drawHealthBars(Graphics2D g2)
     {
         int barWidth = 300;
@@ -536,9 +523,7 @@ public class GameView extends JFrame
                 barHeight
         );
     }
-    // =====================================================
-    // PLAYER RENDERING
-    // =====================================================
+    // Player rendering
     private void drawPlayers(Graphics2D g2)
     {
         // PLAYER 1
@@ -550,7 +535,7 @@ public class GameView extends JFrame
 
             String action =
                     backend.p1.getCurrentAction();
-
+            // Draws their image based on current action
             if ("punch".equals(action))
             {
                 img = ryuPunchImage;
@@ -566,7 +551,7 @@ public class GameView extends JFrame
 
             int x = backend.p1.getX();
             int y = backend.p1.getY();
-
+            // Reflects the image depending on its orientation to other player
             if (backend.p1.isFacingRight())
             {
                 g2.drawImage(
@@ -601,7 +586,7 @@ public class GameView extends JFrame
 
             String action =
                     backend.p2.getCurrentAction();
-
+            // Draws current action state of the player
             if ("punch".equals(action))
             {
                 img = kenPunchImage;
@@ -617,7 +602,7 @@ public class GameView extends JFrame
 
             int x = backend.p2.getX();
             int y = backend.p2.getY();
-
+            // Reflects the image depending on orientation to other player
             if (backend.p2.isFacingRight())
             {
                 g2.drawImage(
@@ -642,9 +627,7 @@ public class GameView extends JFrame
             }
         }
     }
-    // =====================================================
-    // POWER-UP GLOW EFFECT
-    // =====================================================
+    // Power up glow effect
     private void drawPlayerGlow(Graphics2D g2,
                                 Player player)
     {
@@ -732,7 +715,7 @@ public class GameView extends JFrame
                 innerHeight
         );
     }
-
+    // Draws the blast image emanating from the player
     private void drawBlast(Graphics2D g2)
     {
         Player blastingPlayer = null;
@@ -782,7 +765,7 @@ public class GameView extends JFrame
             );
         }
     }
-
+    // Draws the power up image
     private void drawPowerUp(Graphics2D g2)
     {
         PowerUp p =
@@ -800,9 +783,10 @@ public class GameView extends JFrame
             );
         }
     }
-
+    // Draws the power up warning
     private void drawPowerUpWarning(Graphics2D g2)
     {
+        // Checks if it should display a warning
         if (backend.shouldShowPowerUpWarning())
         {
             g2.setColor(
@@ -822,9 +806,10 @@ public class GameView extends JFrame
             );
         }
     }
-
+    // Draws the effect when a player is hit with an attack
     private void drawHitEffects(Graphics2D g2)
     {
+        // Draws punch effect
         if (backend.effectTimer > 0 &&
                 backend.effectType.equals("punch"))
         {
@@ -844,7 +829,7 @@ public class GameView extends JFrame
                     size
             );
         }
-
+        // Draws kick effect
         if (backend.effectTimer > 0 &&
                 backend.effectType.equals("kick"))
         {
@@ -891,7 +876,7 @@ public class GameView extends JFrame
             }
         }
     }
-
+    // Draws each fireball
     private void drawFireballs(Graphics2D g2)
     {
         for (Fireball f : backend.getFireballs())
@@ -917,9 +902,7 @@ public class GameView extends JFrame
             );
         }
     }
-    // =====================================================
-    // GAME OVER SCREEN
-    // =====================================================
+    // Game over screen
     private void drawGameOver(Graphics2D g2)
     {
         // Dark overlay
@@ -933,11 +916,7 @@ public class GameView extends JFrame
                 WINDOW_WIDTH,
                 WINDOW_HEIGHT
         );
-
-        // =====================================================
-        // GAME OVER TEXT
-        // =====================================================
-
+        // Gameover text
         g2.setColor(Color.WHITE);
 
         g2.setFont(
@@ -949,11 +928,7 @@ public class GameView extends JFrame
                 400,
                 300
         );
-
-        // =====================================================
-        // WINNER TEXT
-        // =====================================================
-
+        // Winner text
         g2.setFont(
                 new Font("Arial", Font.BOLD, 40)
         );
@@ -964,10 +939,7 @@ public class GameView extends JFrame
                 380
         );
 
-        // =====================================================
-        // PLAY AGAIN BUTTON
-        // =====================================================
-
+        // Play again button
         int buttonWidth = 280;
         int buttonHeight = 80;
 

@@ -3,7 +3,7 @@ import java.awt.event.*;
 import java.util.HashSet;
 import java.util.ArrayList;
 import java.awt.Rectangle;
-
+// Brawl 360 by Fletcher Cahill and Dylan Kothari
 public class Game implements KeyListener, ActionListener, MouseListener
 {
     public static final int stateWelcome = 0;

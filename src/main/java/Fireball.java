@@ -1,7 +1,7 @@
 import java.awt.Rectangle;
 
 public class Fireball {
-
+    // Coordinates
     private int x;
     private int y;
 
@@ -23,14 +23,14 @@ public class Fireball {
         y = startY;
 
         this.owner = owner;
-
+        // Chcks which direction the fireball is moving
         if (movingRight) {
             speed = 26;
         } else {
             speed = -26;
         }
     }
-
+    // Shifts coordinate its X-Coord over by its speed
     public void update() {
         x += speed;
 
@@ -38,7 +38,7 @@ public class Fireball {
             active = false;
         }
     }
-
+    // All fireballs are basically rectangular imafges
     public Rectangle getBounds() {
 
         return new Rectangle(
@@ -48,7 +48,7 @@ public class Fireball {
                 HEIGHT - 30
         );
     }
-
+    // Getters
     public Player getOwner() {
         return owner;
     }
