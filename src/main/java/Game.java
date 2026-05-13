@@ -6,21 +6,22 @@ import java.awt.Rectangle;
 // Brawl 360 by Fletcher Cahill and Dylan Kothari
 public class Game implements KeyListener, ActionListener, MouseListener
 {
-    public static final int stateWelcome = 0;
-    public static final int stateFight = 1;
-    public static final int stateEnd = 2;
-    public static final int stateInstructions = 3;
-
-    private int gameState = stateWelcome;
+    // Game states
+    public static final int STATE_WELCOME = 0;
+    public static final int STATE_FIGHT = 1;
+    public static final int STATE_END = 2;
+    public static final int STATE_INSTRUCTIONS = 3;
+    // Variable to keep track of current game state
+    private int gameState = STATE_WELCOME;
 
     private GameView window;
-
+    // Two players objects for 2 users
     public Player p1;
     public Player p2;
 
     public String winner;
     public boolean gameOver = false;
-
+    // Game runs at roughly 60 FPS
     private static final int SLEEP_TIME = 16;
 
     private ArrayList<Fireball> fireballs = new ArrayList<>();
@@ -31,21 +32,21 @@ public class Game implements KeyListener, ActionListener, MouseListener
     private boolean p1AttackHit = false;
     private boolean p2AttackHit = false;
 
-    private static final int punchRange = 160;
-    private static final int kickRange = 190;
+    private static final int PUNCH_RANGE = 160;
+    private static final int KICK_RANGE = 190;
 
-    private static final int punchDamage = 6;
-    private static final int kickDamage = 5;
-    private static final int fireballDamage = 2;
-    private static final int blastDamage = 20;
+    private static final int PUNCH_DAMAGE = 6;
+    private static final int KICK_DAMAGE = 5;
+    private static final int FIREBALL_DAMAGE = 2;
+    private static final int BLAST_DAMAGE = 20;
 
-    private static final int defaultCounter = 30;
-    private static final int centerOffset = 115;
-    private static final int effectDuration = 12;
+    private static final int DEFAULT_COUNTER = 30;
+    private static final int CENTER_OFFSET = 115;
+    private static final int EFFECT_DURATION = 12;
 
-    private static final int timeConversionFactor = 60;
-    private static final int warningTime = 3 * timeConversionFactor;
-
+    private static final int TIME_CONVERSION_FACTOR = 60;
+    private static final int WARNING_TIME = 3 * TIME_CONVERSION_FACTOR;
+    // Variables for visual effects
     public int effectX = 0;
     public int effectY = 0;
     public int effectTimer = 0;
@@ -60,9 +61,7 @@ public class Game implements KeyListener, ActionListener, MouseListener
     private int nextSpawnTime = 0;
     private int powerUpCooldownTimer = 0;
 
-    // =====================================================
     // FIREBALL COOLDOWNS
-    // =====================================================
     private int p1FireballCooldown = 0;
     private int p2FireballCooldown = 0;
 
@@ -85,8 +84,8 @@ public class Game implements KeyListener, ActionListener, MouseListener
     // =====================================================
     private int getRandomSpawnTime()
     {
-        int min = 5 * timeConversionFactor;
-        int max = 10 * timeConversionFactor;
+        int min = 5 * TIME_CONVERSION_FACTOR;
+        int max = 10 * TIME_CONVERSION_FACTOR;
         return min + (int)(Math.random() * (max - min));
     }
     // =====================================================
@@ -94,17 +93,17 @@ public class Game implements KeyListener, ActionListener, MouseListener
 // =====================================================
     private int getCooldownTime()
     {
-        int min = 5 * timeConversionFactor;
-        int max = 10 * timeConversionFactor;
+        int min = 5 * TIME_CONVERSION_FACTOR;
+        int max = 10 * TIME_CONVERSION_FACTOR;
         return min + (int)(Math.random() * (max - min));
     }
 
     public boolean shouldShowPowerUpWarning()
     {
-        return gameState == stateFight &&
+        return gameState == STATE_FIGHT &&
                 powerUp == null &&
                 powerUpCooldownTimer == 0 &&
-                nextSpawnTime - powerUpSpawnTimer <= warningTime &&
+                nextSpawnTime - powerUpSpawnTimer <= WARNING_TIME &&
                 powerUpSpawnTimer % 30 < 15;
     }
 
@@ -131,7 +130,7 @@ public class Game implements KeyListener, ActionListener, MouseListener
         // PLAY AGAIN BUTTON
         // =====================================================
 
-        if (gameState == stateEnd)
+        if (gameState == STATE_END)
         {
             if (x >= 460 && x <= 740 &&
                     y >= 470 && y <= 550)
@@ -151,7 +150,7 @@ public class Game implements KeyListener, ActionListener, MouseListener
 
                 winner = "";
 
-                gameState = stateFight;
+                gameState = STATE_FIGHT;
 
                 window.repaint();
 
@@ -163,12 +162,12 @@ public class Game implements KeyListener, ActionListener, MouseListener
         // INSTRUCTIONS SCREEN
         // =====================================================
 
-        if (gameState == stateInstructions)
+        if (gameState == STATE_INSTRUCTIONS)
         {
             // BACK BUTTON AREA
             if (y >= 600)
             {
-                gameState = stateWelcome;
+                gameState = STATE_WELCOME;
 
                 window.repaint();
 
@@ -180,7 +179,7 @@ public class Game implements KeyListener, ActionListener, MouseListener
         // WELCOME SCREEN
         // =====================================================
 
-        if (gameState == stateWelcome)
+        if (gameState == STATE_WELCOME)
         {
             // =====================================================
             // FIGHT BUTTON
@@ -189,7 +188,7 @@ public class Game implements KeyListener, ActionListener, MouseListener
             if (x >= 450 && x <= 750 &&
                     y >= 455 && y <= 705)
             {
-                gameState = stateFight;
+                gameState = STATE_FIGHT;
 
                 window.repaint();
 
@@ -203,7 +202,7 @@ public class Game implements KeyListener, ActionListener, MouseListener
             if (x >= 475 && x <= 725 &&
                     y >= 730 && y <= 790)
             {
-                gameState = stateInstructions;
+                gameState = STATE_INSTRUCTIONS;
 
                 window.repaint();
 
@@ -229,55 +228,55 @@ public class Game implements KeyListener, ActionListener, MouseListener
             if (key == KeyEvent.VK_4 && p1ActionCounter == 0)
             {
                 p1.punch();
-                p1ActionCounter = defaultCounter;
+                p1ActionCounter = DEFAULT_COUNTER;
                 p1AttackHit = false;
             }
 
             if (key == KeyEvent.VK_5 && p1ActionCounter == 0)
             {
                 p1.kick();
-                p1ActionCounter = defaultCounter;
+                p1ActionCounter = DEFAULT_COUNTER;
                 p1AttackHit = false;
             }
 
             if (key == KeyEvent.VK_6 && p1ActionCounter == 0)
             {
                 p1.blast();
-                p1ActionCounter = defaultCounter;
+                p1ActionCounter = DEFAULT_COUNTER;
                 p1AttackHit = false;
             }
 
             if (key == KeyEvent.VK_S && p1ActionCounter == 0)
             {
                 p1.dodge();
-                p1ActionCounter = defaultCounter;
+                p1ActionCounter = DEFAULT_COUNTER;
             }
 
             if (key == KeyEvent.VK_P && p2ActionCounter == 0)
             {
                 p2.punch();
-                p2ActionCounter = defaultCounter;
+                p2ActionCounter = DEFAULT_COUNTER;
                 p2AttackHit = false;
             }
 
             if (key == KeyEvent.VK_OPEN_BRACKET && p2ActionCounter == 0)
             {
                 p2.kick();
-                p2ActionCounter = defaultCounter;
+                p2ActionCounter = DEFAULT_COUNTER;
                 p2AttackHit = false;
             }
 
             if (key == KeyEvent.VK_CLOSE_BRACKET && p2ActionCounter == 0)
             {
                 p2.blast();
-                p2ActionCounter = defaultCounter;
+                p2ActionCounter = DEFAULT_COUNTER;
                 p2AttackHit = false;
             }
 
             if (key == KeyEvent.VK_DOWN && p2ActionCounter == 0)
             {
                 p2.dodge();
-                p2ActionCounter = defaultCounter;
+                p2ActionCounter = DEFAULT_COUNTER;
             }
             // =====================================================
             // PLAYER 1 FIREBALL
@@ -359,7 +358,7 @@ public class Game implements KeyListener, ActionListener, MouseListener
     @Override
     public void actionPerformed(ActionEvent e)
     {
-        if (gameState != stateFight)
+        if (gameState != STATE_FIGHT)
         {
             window.repaint();
             return;
@@ -429,13 +428,13 @@ public class Game implements KeyListener, ActionListener, MouseListener
             {
                 gameOver = true;
                 winner = "Player 2 Wins!";
-                gameState = stateEnd;
+                gameState = STATE_END;
             }
             else if (p2.getHealth() <= 0)
             {
                 gameOver = true;
                 winner = "Player 1 Wins!";
-                gameState = stateEnd;
+                gameState = STATE_END;
             }
         }
 
@@ -464,7 +463,7 @@ public class Game implements KeyListener, ActionListener, MouseListener
             {
                 if (canBeHit(p1))
                 {
-                    p1.takeDamage(fireballDamage);
+                    p1.takeDamage(FIREBALL_DAMAGE);
                     p1.applyKnockback(18, f.getOwner().isFacingRight());
                     f.deactivate();
                 }
@@ -474,7 +473,7 @@ public class Game implements KeyListener, ActionListener, MouseListener
             {
                 if (canBeHit(p2))
                 {
-                    p2.takeDamage(fireballDamage);
+                    p2.takeDamage(FIREBALL_DAMAGE);
                     p2.applyKnockback(18, f.getOwner().isFacingRight());
                     f.deactivate();
                 }
@@ -537,8 +536,8 @@ public class Game implements KeyListener, ActionListener, MouseListener
 
     private boolean isInFront(Player attacker, Player target)
     {
-        int attackerCenter = attacker.getX() + centerOffset;
-        int targetCenter = target.getX() + centerOffset;
+        int attackerCenter = attacker.getX() + CENTER_OFFSET;
+        int targetCenter = target.getX() + CENTER_OFFSET;
 
         if (attacker.isFacingRight())
         {
@@ -552,8 +551,8 @@ public class Game implements KeyListener, ActionListener, MouseListener
 
     private void checkAttacks()
     {
-        int p1Center = p1.getX() + centerOffset;
-        int p2Center = p2.getX() + centerOffset;
+        int p1Center = p1.getX() + CENTER_OFFSET;
+        int p2Center = p2.getX() + CENTER_OFFSET;
 
         int xDistance = Math.abs(p1Center - p2Center);
         int yDistance = Math.abs(p1.getY() - p2.getY());
@@ -562,16 +561,16 @@ public class Game implements KeyListener, ActionListener, MouseListener
 
         if (!p1AttackHit && closeY && isInFront(p1, p2))
         {
-            if (p1.getCurrentAction().equals("punch") && xDistance <= punchRange)
+            if (p1.getCurrentAction().equals("punch") && xDistance <= PUNCH_RANGE)
             {
                 if (canBeHit(p2))
                 {
-                    p2.takeDamage(punchDamage);
+                    p2.takeDamage(PUNCH_DAMAGE);
                     p2.applyKnockback(8, p1.isFacingRight());
 
-                    effectX = (p1.getX() + p2.getX()) / 2 + centerOffset;
+                    effectX = (p1.getX() + p2.getX()) / 2 + CENTER_OFFSET;
                     effectY = (p1.getY() + p2.getY()) / 2 + 100;
-                    effectTimer = effectDuration;
+                    effectTimer = EFFECT_DURATION;
                     effectType = "punch";
 
                     shakeTimer = 6;
@@ -580,16 +579,16 @@ public class Game implements KeyListener, ActionListener, MouseListener
 
                 p1AttackHit = true;
             }
-            else if (p1.getCurrentAction().equals("kick") && xDistance <= kickRange)
+            else if (p1.getCurrentAction().equals("kick") && xDistance <= KICK_RANGE)
             {
                 if (canBeHit(p2))
                 {
-                    p2.takeDamage(kickDamage);
+                    p2.takeDamage(KICK_DAMAGE);
                     p2.applyKnockback(14, p1.isFacingRight());
 
-                    effectX = (p1.getX() + p2.getX()) / 2 + centerOffset;
+                    effectX = (p1.getX() + p2.getX()) / 2 + CENTER_OFFSET;
                     effectY = p2.getY() + 180;
-                    effectTimer = effectDuration;
+                    effectTimer = EFFECT_DURATION;
                     effectType = "kick";
 
                     shakeTimer = 10;
@@ -602,16 +601,16 @@ public class Game implements KeyListener, ActionListener, MouseListener
 
         if (!p2AttackHit && closeY && isInFront(p2, p1))
         {
-            if (p2.getCurrentAction().equals("punch") && xDistance <= punchRange)
+            if (p2.getCurrentAction().equals("punch") && xDistance <= PUNCH_RANGE)
             {
                 if (canBeHit(p1))
                 {
-                    p1.takeDamage(punchDamage);
+                    p1.takeDamage(PUNCH_DAMAGE);
                     p1.applyKnockback(8, p2.isFacingRight());
 
-                    effectX = (p1.getX() + p2.getX()) / 2 + centerOffset;
+                    effectX = (p1.getX() + p2.getX()) / 2 + CENTER_OFFSET;
                     effectY = (p1.getY() + p2.getY()) / 2 + 100;
-                    effectTimer = effectDuration;
+                    effectTimer = EFFECT_DURATION;
                     effectType = "punch";
 
                     shakeTimer = 6;
@@ -620,16 +619,16 @@ public class Game implements KeyListener, ActionListener, MouseListener
 
                 p2AttackHit = true;
             }
-            else if (p2.getCurrentAction().equals("kick") && xDistance <= kickRange)
+            else if (p2.getCurrentAction().equals("kick") && xDistance <= KICK_RANGE)
             {
                 if (canBeHit(p1))
                 {
-                    p1.takeDamage(kickDamage);
+                    p1.takeDamage(KICK_DAMAGE);
                     p1.applyKnockback(14, p2.isFacingRight());
 
-                    effectX = (p1.getX() + p2.getX()) / 2 + centerOffset;
+                    effectX = (p1.getX() + p2.getX()) / 2 + CENTER_OFFSET;
                     effectY = p1.getY() + 180;
-                    effectTimer = effectDuration;
+                    effectTimer = EFFECT_DURATION;
                     effectType = "kick";
 
                     shakeTimer = 10;
@@ -645,8 +644,8 @@ public class Game implements KeyListener, ActionListener, MouseListener
 
     private void checkBlastDamage()
     {
-        int p1Center = p1.getX() + centerOffset;
-        int p2Center = p2.getX() + centerOffset;
+        int p1Center = p1.getX() + CENTER_OFFSET;
+        int p2Center = p2.getX() + CENTER_OFFSET;
         int distance = Math.abs(p1Center - p2Center);
 
         if (p1.isBlasting() && !p1.hasBlastHit() && isInFront(p1, p2))
@@ -655,7 +654,7 @@ public class Game implements KeyListener, ActionListener, MouseListener
             {
                 if (canBeHit(p2))
                 {
-                    p2.takeDamage(blastDamage);
+                    p2.takeDamage(BLAST_DAMAGE);
                     p2.applyKnockback(20, p1.isFacingRight());
                 }
 
@@ -669,7 +668,7 @@ public class Game implements KeyListener, ActionListener, MouseListener
             {
                 if (canBeHit(p1))
                 {
-                    p1.takeDamage(blastDamage);
+                    p1.takeDamage(BLAST_DAMAGE);
                     p1.applyKnockback(20, p2.isFacingRight());
                 }
 

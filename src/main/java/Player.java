@@ -1,7 +1,8 @@
 public class Player
 {
-
+    // Starting health of player
     private int health = 100;
+    // Location of player
     private int positionX;
     private int positionY;
 
@@ -191,9 +192,7 @@ public class Player
             health = 0;
         }
     }
-    // =====================================================
-// BLAST ATTACK
-// =====================================================
+    // Blast attack
     public void blast()
     {
         if (hasPowerUp && !blasting)

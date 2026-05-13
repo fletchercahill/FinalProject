@@ -162,6 +162,7 @@ public class GameView extends JFrame
                     getHeight(),
                     this
             );
+
             drawHealthBars(g2);
             drawPowerUp(g2);
             drawPowerUpWarning(g2);
@@ -183,7 +184,9 @@ public class GameView extends JFrame
             bf.show();
         }
     }
+// =====================================================
 // WELCOME SCREEN
+// =====================================================
 
     private void drawWelcomeScreen(Graphics2D g2)
     {
