@@ -8,6 +8,7 @@ public class Player
 
     private boolean facingRight = true;
     private int jumpStartY;
+    // Length of time before player returns to idle state when doing an action
     private int actionTimer = 0;
     private boolean isJumping = false;
 
@@ -18,15 +19,15 @@ public class Player
 
     private boolean hasPowerUp = false;
 
-    private static final int maxBlastTime = 40;
+    private static final int MAX_BLAST_TIME = 40;
 
     private String currentAction = "idle";
 
-    private static final int moveSpeed = 10;
+    private static final int MOVE_SPEED = 10;
 
     private double velocityX = 0;
     private double velocityY = 0;
-
+    // Jumping mechanics
     private static final double gravity = 1.0;
     private static final double jumpStrength = -15;
     private static final int groundLevel = 500;
@@ -51,7 +52,7 @@ public class Player
     {
         if (positionX >= 0)
         {
-            positionX -= moveSpeed;
+            positionX -= MOVE_SPEED;
         }
     }
 
@@ -59,7 +60,7 @@ public class Player
     {
         if (positionX <= 1000)
         {
-            positionX += moveSpeed;
+            positionX += MOVE_SPEED;
         }
     }
 
@@ -70,6 +71,7 @@ public class Player
 
     public void update()
     {
+        // Vertical movement
         velocityY += gravity;
         positionY += velocityY;
 
@@ -84,10 +86,9 @@ public class Player
         {
             velocityY = 0;
         }
-
+        // Horizontal movement
         positionX += velocityX;
         velocityX *= 0.8;
-
         if (Math.abs(velocityX) < 0.5)
         {
             velocityX = 0;
@@ -149,9 +150,7 @@ public class Player
     {
         hasPowerUp = true;
     }
-    // =====================================================
-// POWER-UP STATUS
-// =====================================================
+   // Power up status
     public boolean hasPowerUp()
     {
         return hasPowerUp;
@@ -168,7 +167,7 @@ public class Player
         currentAction = "dodge";
         actionTimer = 25;
     }
-
+    // Puts player back in idle state
     public void resetAction()
     {
         currentAction = "idle";
@@ -198,7 +197,7 @@ public class Player
         if (hasPowerUp && !blasting)
         {
             blasting = true;
-            blastTimer = maxBlastTime;
+            blastTimer = MAX_BLAST_TIME;
             blastRadius = 0;
             currentAction = "blast";
             blastHit = false;
@@ -226,7 +225,7 @@ public class Player
     {
         return blastRadius;
     }
-
+    // Response to player being attacked
     public void applyKnockback(double force, boolean attackerFacingRight)
     {
         if (attackerFacingRight)
@@ -240,7 +239,7 @@ public class Player
 
         velocityY = -6;
     }
-
+    // Accessors
     public int getX()
     {
         return positionX;

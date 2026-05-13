@@ -278,10 +278,8 @@ public class Game implements KeyListener, ActionListener, MouseListener
                 p2.dodge();
                 p2ActionCounter = DEFAULT_COUNTER;
             }
-            // =====================================================
-            // PLAYER 1 FIREBALL
-            // =====================================================
 
+            // PLAYER 1 FIREBALL
             if (key == KeyEvent.VK_7)
             {
                 if (p1FireballCooldown == 0)
@@ -292,10 +290,7 @@ public class Game implements KeyListener, ActionListener, MouseListener
                             FIREBALL_COOLDOWN_TIME;
                 }
             }
-            // =====================================================
             // PLAYER 2 FIREBALL
-            // =====================================================
-
             if (key == KeyEvent.VK_BACK_SLASH)
             {
                 if (p2FireballCooldown == 0)
