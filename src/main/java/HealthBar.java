@@ -7,6 +7,7 @@ public class HealthBar
     {
         this.maxHealth = maxHealth;
     }
+
     // Returns the length of the healthbar based on the current health of the player
     public int getWidth(int currentHealth, int maxWidth)
     {

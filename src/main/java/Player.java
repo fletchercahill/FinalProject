@@ -32,6 +32,9 @@ public class Player
     private static final double jumpStrength = -15;
     private static final int groundLevel = 500;
 
+    // =====================================================
+    // Player constructor initializes with x,y position
+    // =====================================================
     public Player(int x, int y)
     {
         positionX = x;
@@ -69,6 +72,9 @@ public class Player
         return isJumping;
     }
 
+    // =====================================================
+    // Updates player position
+    // =====================================================
     public void update()
     {
         // Vertical movement
@@ -86,6 +92,7 @@ public class Player
         {
             velocityY = 0;
         }
+
         // Horizontal movement
         positionX += velocityX;
         velocityX *= 0.8;
@@ -129,6 +136,9 @@ public class Player
         }
     }
 
+    // =====================================================
+    // Handle player jump action
+    // =====================================================
     public void jump()
     {
         if (!isJumping)
@@ -140,6 +150,9 @@ public class Player
         }
     }
 
+    // =====================================================
+    // Handle player kick action
+    // =====================================================
     public void kick()
     {
         currentAction = "kick";
@@ -150,18 +163,25 @@ public class Player
     {
         hasPowerUp = true;
     }
+
    // Power up status
     public boolean hasPowerUp()
     {
         return hasPowerUp;
     }
 
+    // =====================================================
+    // Handle player punch action
+    // =====================================================
     public void punch()
     {
         currentAction = "punch";
         actionTimer = 25;
     }
 
+    // =====================================================
+    // Handle player dodge action
+    // =====================================================
     public void dodge()
     {
         currentAction = "dodge";
@@ -172,6 +192,10 @@ public class Player
     {
         currentAction = "idle";
     }
+
+    // =====================================================
+    // Handle player fireball action
+    // =====================================================
     public void fireball() {
         currentAction = "fireball";
         actionTimer = 20;
@@ -182,6 +206,9 @@ public class Player
         return currentAction;
     }
 
+    // =====================================================
+    // Update player health status due to damage
+    // =====================================================
     public void takeDamage(int damage)
     {
         health -= damage;
@@ -191,7 +218,10 @@ public class Player
             health = 0;
         }
     }
-    // Blast attack
+
+    // =====================================================
+    // Handle player blast action
+    // =====================================================
     public void blast()
     {
         if (hasPowerUp && !blasting)
@@ -225,7 +255,10 @@ public class Player
     {
         return blastRadius;
     }
+
+    // =====================================================
     // Response to player being attacked
+    // =====================================================
     public void applyKnockback(double force, boolean attackerFacingRight)
     {
         if (attackerFacingRight)

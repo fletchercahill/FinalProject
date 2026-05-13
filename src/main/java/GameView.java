@@ -173,7 +173,7 @@ public class GameView extends JFrame
 
             g2.translate(-shakeX, -shakeY);
 
-            if (backend.gameOver)
+            if (backend.isGameOver())
             {
                 drawGameOver(g2);
             }
@@ -451,7 +451,7 @@ public class GameView extends JFrame
 
         int p1Width =
                 p1HealthBar.getWidth(
-                        backend.p1.getHealth(),
+                        backend.getP1().getHealth(),
                         barWidth
                 );
 
@@ -495,7 +495,7 @@ public class GameView extends JFrame
 
         int p2Width =
                 p2HealthBar.getWidth(
-                        backend.p2.getHealth(),
+                        backend.getP2().getHealth(),
                         barWidth
                 );
 
@@ -530,14 +530,14 @@ public class GameView extends JFrame
     private void drawPlayers(Graphics2D g2)
     {
         // PLAYER 1
-        if (backend.p1 != null)
+        if (backend.getP1() != null)
         {
-            drawPlayerGlow(g2, backend.p1);
+            drawPlayerGlow(g2, backend.getP1());
 
             Image img = ryuIdleImage;
 
             String action =
-                    backend.p1.getCurrentAction();
+                    backend.getP1().getCurrentAction();
             // Draws their image based on current action
             if ("punch".equals(action))
             {
@@ -552,10 +552,10 @@ public class GameView extends JFrame
                 img = ryuDodgeImage;
             }
 
-            int x = backend.p1.getX();
-            int y = backend.p1.getY();
+            int x = backend.getP1().getX();
+            int y = backend.getP1().getY();
             // Reflects the image depending on its orientation to other player
-            if (backend.p1.isFacingRight())
+            if (backend.getP1().isFacingRight())
             {
                 g2.drawImage(
                         img,
@@ -581,14 +581,14 @@ public class GameView extends JFrame
 
         // PLAYER 2
 
-        if (backend.p2 != null)
+        if (backend.getP2() != null)
         {
-            drawPlayerGlow(g2, backend.p2);
+            drawPlayerGlow(g2, backend.getP2());
 
             Image img = kenIdleImage;
 
             String action =
-                    backend.p2.getCurrentAction();
+                    backend.getP2().getCurrentAction();
             // Draws current action state of the player
             if ("punch".equals(action))
             {
@@ -603,10 +603,10 @@ public class GameView extends JFrame
                 img = kenDodgeImage;
             }
 
-            int x = backend.p2.getX();
-            int y = backend.p2.getY();
+            int x = backend.getP2().getX();
+            int y = backend.getP2().getY();
             // Reflects the image depending on orientation to other player
-            if (backend.p2.isFacingRight())
+            if (backend.getP2().isFacingRight())
             {
                 g2.drawImage(
                         img,
@@ -723,15 +723,15 @@ public class GameView extends JFrame
     {
         Player blastingPlayer = null;
 
-        if (backend.p1 != null &&
-                backend.p1.isBlasting())
+        if (backend.getP1() != null &&
+                backend.getP1().isBlasting())
         {
-            blastingPlayer = backend.p1;
+            blastingPlayer = backend.getP1();
         }
-        else if (backend.p2 != null &&
-                backend.p2.isBlasting())
+        else if (backend.getP2() != null &&
+                backend.getP2().isBlasting())
         {
-            blastingPlayer = backend.p2;
+            blastingPlayer = backend.getP2();
         }
 
         if (blastingPlayer != null)
@@ -886,7 +886,7 @@ public class GameView extends JFrame
         {
             Image img;
 
-            if (f.getOwner() == backend.p1)
+            if (f.getOwner() == backend.getP1())
             {
                 img = redBallImage;
             }
@@ -928,7 +928,7 @@ public class GameView extends JFrame
 
         g2.drawString(
                 "GAME OVER",
-                400,
+                435,
                 300
         );
         // Winner text
@@ -937,8 +937,8 @@ public class GameView extends JFrame
         );
 
         g2.drawString(
-                backend.winner,
-                420,
+                backend.getWinner(),
+                470,
                 380
         );
 
