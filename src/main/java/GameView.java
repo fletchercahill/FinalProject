@@ -115,13 +115,13 @@ public class GameView extends JFrame
         try
         {
             // Draws game states
-            if (backend.getGameState() == Game.stateWelcome)
+            if (backend.getGameState() == Game.STATE_WELCOME)
             {
                 drawWelcomeScreen(g2);
                 return;
             }
 
-            if (backend.getGameState() == Game.stateInstructions)
+            if (backend.getGameState() == Game.STATE_INSTRUCTIONS)
             {
                 drawInstructionsScreen(g2);
                 return;
